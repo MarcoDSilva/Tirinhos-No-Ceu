@@ -3,7 +3,7 @@
  * Purpose - To validate the Java unit, I chose to create a game
  * with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 0.1.0
+ * Version alpha - 0.6.0
  *
  * @author - Marco Silva
  */
@@ -12,7 +12,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.Camera;
 
 //MAIN CLASS
 public class MainGame extends ApplicationAdapter {
@@ -28,17 +28,17 @@ public class MainGame extends ApplicationAdapter {
     //==== constants for game size and window size ===
     private final int mapWidth = 800;
     private final int mapHeight = 800;
-
     private final int viewWidth = 640;
     private final int viewHeight = 480;
 
-    //==== Stage and actors ====
+    //==== Stage | Actors | Camera ====
     private Stage mainStage;
     private Stage uiStage;
     private BasicActor spaceShip;
     private BasicActor meteor;
     private BasicActor background;
     private BasicActor win;
+    private Camera gameCamera;
 
     //labels for score
     LabelTextGround labels;
@@ -66,6 +66,7 @@ public class MainGame extends ApplicationAdapter {
         update();
         screenClean();
         collision();
+        camera();
         mainStage.draw();
         uiStage.draw();
     }
@@ -91,9 +92,9 @@ public class MainGame extends ApplicationAdapter {
 
         //=== avoiding the margins of the window ===
         // clamp replaces the the if X < 0, or x > marginX
-        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0, 
+        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0,
                 viewWidth - spaceShip.getWidth()));
-        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0, 
+        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0,
                 viewHeight - spaceShip.getHeight()));
     }
 
@@ -141,7 +142,7 @@ public class MainGame extends ApplicationAdapter {
     private void initPositions() {
         background.setPosition(0, 0);
         spaceShip.setPosition(10, 10);
-        meteor.setPosition(350, 400);
+        meteor.setPosition(200, 350);
         win.setPosition(0, 0);
     }
 
@@ -151,6 +152,24 @@ public class MainGame extends ApplicationAdapter {
         mainStage.addActor(spaceShip);
         uiStage.addActor(labels.getTimeLabel());
         uiStage.addActor(win);
+    }
+
+    private void camera() {
+        gameCamera = mainStage.getCamera();
+
+        //camera here it's centered on the player
+        //uses the clamp method , gets both axis for position and size to calculate
+        gameCamera.position.set(spaceShip.getX() + spaceShip.getOriginX(),
+                spaceShip.getY() + spaceShip.getOriginY(), 0);
+
+        //bounds the camera to the window
+        gameCamera.position.x = MathUtils.clamp(gameCamera.position.x,
+                viewWidth / 2, mapWidth - viewWidth / 2);
+
+        gameCamera.position.y = MathUtils.clamp(gameCamera.position.y,
+                viewHeight / 2, mapHeight - viewHeight / 2);
+
+        gameCamera.update();
     }
 
     //testing actions spinning the meteor sprite game over end screen flashing tint
@@ -171,3 +190,15 @@ public class MainGame extends ApplicationAdapter {
             )
     );
 }
+
+/**
+ * TODO LIST:
+ * - PLAYER MOVEMENT : rotating when left/right keys are pressed, 
+ *      slowing down only when down or s is the key being pressed
+ * - ASTEROIDS: spawn, movement, destruction.
+ * - HP : both for asteroids and for the spaceship
+ * - POINTS: for each asteroid some points are awarded
+ * - UI.
+ * - POWERUPS (?)
+ * 
+ */
