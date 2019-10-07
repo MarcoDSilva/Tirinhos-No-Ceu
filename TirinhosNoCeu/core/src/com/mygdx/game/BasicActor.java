@@ -1,5 +1,5 @@
 /*
- have no idea what I am doingF
+    actor class for the scene objects
  */
 package com.mygdx.game;
 
