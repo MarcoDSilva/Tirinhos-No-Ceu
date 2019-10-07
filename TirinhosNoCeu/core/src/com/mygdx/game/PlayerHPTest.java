@@ -22,20 +22,10 @@ public class PlayerHPTest extends Sprite {
         HP = 3;
     }
 
-    /**
-     * returns the HP available
-     *
-     * @return HP
-     */
     public int getHP() {
         return HP;
     }
 
-    /**
-     * Sets the HP available
-     *
-     * @param HP
-     */
     public void setHP(int HP) {
         this.HP = HP;
     }
@@ -49,11 +39,6 @@ public class PlayerHPTest extends Sprite {
         HP -= amount;
     }
 
-    /**
-     * heals the HP by the amount
-     *
-     * @param amount
-     */
     public void heal(int amount) {
         HP += amount;
     }
