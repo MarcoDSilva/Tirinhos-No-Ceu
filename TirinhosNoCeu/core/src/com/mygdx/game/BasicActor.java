@@ -17,8 +17,8 @@ import com.badlogic.gdx.graphics.Color;
 public class BasicActor extends Actor {
 
     // ====== object properties =====
-    private TextureRegion texture;
-    private Rectangle boundary;
+    private final TextureRegion texture;
+    private final Rectangle boundary;
 
     private float velocityX;
     private float velocityY;
@@ -68,7 +68,7 @@ public class BasicActor extends Actor {
         return velocityX;
     }
 
-    public void setVelocityX(float velocityX) {
+    public final void setVelocityX(float velocityX) {
         this.velocityX = velocityX;
     }
 
@@ -76,7 +76,7 @@ public class BasicActor extends Actor {
         return velocityY;
     }
 
-    public void setVelocityY(float velocityY) {
+    public final void setVelocityY(float velocityY) {
         this.velocityY = velocityY;
     }
 }

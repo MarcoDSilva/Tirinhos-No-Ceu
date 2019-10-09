@@ -1,18 +1,18 @@
+package GameLevels;
+
 /**
  * Game Project - TirinhosNoCeu
- * Purpose - To validate the Java unit, I chose to create a game
  * with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 0.1.0
+ * Version alpha - 0.7.0
  *
  * @author - Marco Silva
  */
-package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,35 +21,49 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.Camera;
+import com.mygdx.game.BasicActor;
+import com.mygdx.game.LabelTextGround;
 
-//MAIN CLASS
-public class MainGame extends ApplicationAdapter {
+/**
+ *
+ * @author Marco Silva
+ */
+public class FirstLevel implements Screen {
+
+    // ===== CONSTRUCTOR =====
+    public FirstLevel(Game game) {
+        this.game = game;
+        create();
+    }
 
     //==== constants for game size and window size ===
     private final int mapWidth = 800;
     private final int mapHeight = 800;
-
     private final int viewWidth = 640;
     private final int viewHeight = 480;
 
-    //==== Stage and actors ====
+    //==== Stage | Actors | Camera ====
     private Stage mainStage;
     private Stage uiStage;
     private BasicActor spaceShip;
     private BasicActor meteor;
     private BasicActor background;
     private BasicActor win;
+    private Camera gameCamera;
 
     //labels for score
     LabelTextGround labels;
 
-    @Override
+    //reference to switch sreens
+    public Game game;
+
     public void create() {
         // === instantiating the stage and actors ====
         mainStage = new Stage();
         uiStage = new Stage();
         labels = new LabelTextGround();
-
+        
         initActor();
         initTextures();
         initPositions();
@@ -61,16 +75,20 @@ public class MainGame extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
+    public void render(float deltaTime) {
         playerMovement();
-        update();
+        update(deltaTime);
         screenClean();
         collision();
+        camera();
         mainStage.draw();
         uiStage.draw();
     }
 
-    // testing movements
+    /**
+     * player movement
+     * 
+     */
     private void playerMovement() {
         //MOVEMENT
         spaceShip.setVelocityX(0);
@@ -91,9 +109,9 @@ public class MainGame extends ApplicationAdapter {
 
         //=== avoiding the margins of the window ===
         // clamp replaces the the if X < 0, or x > marginX
-        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0, 
+        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0,
                 viewWidth - spaceShip.getWidth()));
-        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0, 
+        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0,
                 viewHeight - spaceShip.getHeight()));
     }
 
@@ -115,14 +133,17 @@ public class MainGame extends ApplicationAdapter {
     }
 
     //updates the stage delta time  
-    private void update() {
-        float fps = Gdx.graphics.getDeltaTime();
-        mainStage.act(fps);
-        uiStage.act(fps);
-        labels.setTimeElapsed(fps);
+    private void update(float deltaTime) {
+        mainStage.act(deltaTime);
+        uiStage.act(deltaTime);
+        labels.setTimeElapsed(deltaTime);
         labels.setText("Time: " + (int) labels.getTimeElapsed());
     }
 
+    /**
+     * here we initialize all the actors for the scene
+     * @return actors 
+     */
     private void initActor() {
         background = new BasicActor();
         spaceShip = new BasicActor();
@@ -130,6 +151,10 @@ public class MainGame extends ApplicationAdapter {
         win = new BasicActor();
     }
 
+    /**
+     * initialize all the textures required to the respective actors
+     * @return textures
+     */
     private void initTextures() {
         background.setTexture(new Texture("blueBackground.png"));
         spaceShip.setTexture(new Texture("playerShip.png"));
@@ -138,19 +163,74 @@ public class MainGame extends ApplicationAdapter {
         win.setVisible(false);
     }
 
+    /**
+     * sets the position of the elements at the scene
+     * @return positions
+     */
     private void initPositions() {
         background.setPosition(0, 0);
         spaceShip.setPosition(10, 10);
-        meteor.setPosition(350, 400);
+        meteor.setPosition(200, 350);
         win.setPosition(0, 0);
     }
 
+    /**
+     * adds the actors to the respective scenes
+     * @return adds actors
+     */
     private void addActors() {
         mainStage.addActor(background);
         mainStage.addActor(meteor);
         mainStage.addActor(spaceShip);
         uiStage.addActor(labels.getTimeLabel());
         uiStage.addActor(win);
+    }
+
+    /**
+     * defines the scene camera and respective placement
+     * @return camera
+     */
+    private void camera() {
+        gameCamera = mainStage.getCamera();
+
+        //camera here it's centered on the player
+        //uses the clamp method , gets both axis for position and size to calculate
+        gameCamera.position.set(spaceShip.getX() + spaceShip.getOriginX(),
+                spaceShip.getY() + spaceShip.getOriginY(), 0);
+
+        //bounds the camera to the window
+        gameCamera.position.x = MathUtils.clamp(gameCamera.position.x,
+                viewWidth / 2, mapWidth - viewWidth / 2);
+
+        gameCamera.position.y = MathUtils.clamp(gameCamera.position.y,
+                viewHeight / 2, mapHeight - viewHeight / 2);
+
+        gameCamera.update();
+    }
+
+    // ====== required methods for screen ======
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void hide() {
     }
 
     //testing actions spinning the meteor sprite game over end screen flashing tint
@@ -171,3 +251,16 @@ public class MainGame extends ApplicationAdapter {
             )
     );
 }
+
+/**
+ * TODO LIST:
+ * - PLAYER MOVEMENT : rotating when left/right keys are pressed, 
+ *      slowing down only when down or s is the key being pressed
+ * - ASTEROIDS: spawn, movement, destruction.
+ * - HP : both for asteroids and for the spaceship
+ * - POINTS: for each asteroid some points are awarded
+ * - UI.
+ * - POWERUPS (?)
+ * 
+ */
+
