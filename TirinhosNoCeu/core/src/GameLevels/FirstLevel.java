@@ -4,7 +4,7 @@ package GameLevels;
  * Game Project - TirinhosNoCeu
  * with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 0.7.0
+ * Version alpha - 0.8.0
  *
  * @author - Marco Silva
  */
@@ -105,6 +105,9 @@ public class FirstLevel implements Screen {
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
             spaceShip.setVelocityY(-200);
+        }
+        if(Gdx.input.isKeyPressed(Keys.M)) {
+            game.setScreen(new GameMainMenu(game));
         }
 
         //=== avoiding the margins of the window ===
@@ -252,15 +255,4 @@ public class FirstLevel implements Screen {
     );
 }
 
-/**
- * TODO LIST:
- * - PLAYER MOVEMENT : rotating when left/right keys are pressed, 
- *      slowing down only when down or s is the key being pressed
- * - ASTEROIDS: spawn, movement, destruction.
- * - HP : both for asteroids and for the spaceship
- * - POINTS: for each asteroid some points are awarded
- * - UI.
- * - POWERUPS (?)
- * 
- */
 
