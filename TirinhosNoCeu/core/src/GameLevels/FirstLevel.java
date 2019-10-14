@@ -1,93 +1,74 @@
 package GameLevels;
 
 /**
- * Game Project - TirinhosNoCeu
- * with the intentions to learn how to use classes and frameworks
+ * Game Project - TirinhosNoCeu with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 0.8.0
+ * Version alpha - 1.0.0
  *
  * @author - Marco Silva
  */
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.Camera;
 import com.mygdx.game.BasicActor;
+import com.mygdx.game.CommonScreen;
 import com.mygdx.game.LabelTextGround;
 
 /**
  *
  * @author Marco Silva
  */
-public class FirstLevel implements Screen {
-
-    // ===== CONSTRUCTOR =====
-    public FirstLevel(Game game) {
-        this.game = game;
-        create();
-    }
-
-    //==== constants for game size and window size ===
-    private final int mapWidth = 800;
-    private final int mapHeight = 800;
-    private final int viewWidth = 640;
-    private final int viewHeight = 480;
+public class FirstLevel extends CommonScreen {
 
     //==== Stage | Actors | Camera ====
-    private Stage mainStage;
-    private Stage uiStage;
     private BasicActor spaceShip;
     private BasicActor meteor;
     private BasicActor background;
     private BasicActor win;
     private Camera gameCamera;
+    private LabelTextGround labels;
+    //==== constants for game size and window size ===
+    private final int mapWidth = 800;
+    private final int mapHeight = 800;
 
-    //labels for score
-    LabelTextGround labels;
+    // ===== CONSTRUCTOR =====
+    public FirstLevel(Game g) {
+        super(g);
+    }
 
-    //reference to switch sreens
-    public Game game;
-
+    /**
+     * here we instantiate the actors, textures and positions
+     */
     public void create() {
-        // === instantiating the stage and actors ====
-        mainStage = new Stage();
-        uiStage = new Stage();
-        labels = new LabelTextGround();
-        
         initActor();
         initTextures();
         initPositions();
-
-        // === meteor animation action set ====
-        meteor.addAction(spinMeRoundBaby);
-        meteor.setOrigin(meteor.getWidth() / 2, meteor.getHeight() / 2);
         addActors();
     }
 
+    /**
+     * updates the game
+     *
+     * @param deltaTime
+     */
     @Override
-    public void render(float deltaTime) {
+    public void update(float deltaTime) {
         playerMovement();
-        update(deltaTime);
-        screenClean();
+        labels.setTimeElapsed(deltaTime);
+        labels.setText("Time: " + (int) labels.getTimeElapsed());
         collision();
         camera();
-        mainStage.draw();
-        uiStage.draw();
     }
 
     /**
      * player movement
-     * 
      */
     private void playerMovement() {
         //MOVEMENT
@@ -106,16 +87,12 @@ public class FirstLevel implements Screen {
         if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
             spaceShip.setVelocityY(-200);
         }
-        if(Gdx.input.isKeyPressed(Keys.M)) {
-            game.setScreen(new GameMainMenu(game));
-        }
-
         //=== avoiding the margins of the window ===
         // clamp replaces the the if X < 0, or x > marginX
         spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0,
-                viewWidth - spaceShip.getWidth()));
+                getWidth() - spaceShip.getWidth()));
         spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0,
-                viewHeight - spaceShip.getHeight()));
+                getHeight() - spaceShip.getHeight()));
     }
 
     // collision tryout needs to be fixed
@@ -129,33 +106,23 @@ public class FirstLevel implements Screen {
         }
     }
 
-    // screen color cleaner
-    private void screenClean() {
-        Gdx.gl.glClearColor(0.5f, 0.1f, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
-    //updates the stage delta time  
-    private void update(float deltaTime) {
-        mainStage.act(deltaTime);
-        uiStage.act(deltaTime);
-        labels.setTimeElapsed(deltaTime);
-        labels.setText("Time: " + (int) labels.getTimeElapsed());
-    }
-
     /**
      * here we initialize all the actors for the scene
-     * @return actors 
+     *
+     * @return actors
      */
     private void initActor() {
         background = new BasicActor();
         spaceShip = new BasicActor();
+
         meteor = new BasicActor();
         win = new BasicActor();
+        labels = new LabelTextGround();
     }
 
     /**
      * initialize all the textures required to the respective actors
+     *
      * @return textures
      */
     private void initTextures() {
@@ -168,6 +135,7 @@ public class FirstLevel implements Screen {
 
     /**
      * sets the position of the elements at the scene
+     *
      * @return positions
      */
     private void initPositions() {
@@ -179,18 +147,28 @@ public class FirstLevel implements Screen {
 
     /**
      * adds the actors to the respective scenes
+     *
      * @return adds actors
      */
     private void addActors() {
         mainStage.addActor(background);
         mainStage.addActor(meteor);
+
+        meteor.setOrigin(meteor.getWidth() / 2, meteor.getHeight() / 2);
+        meteor.addAction(Actions.parallel(
+                Actions.alpha(1),
+                Actions.rotateBy(360 * 5, 30),
+                Actions.scaleTo(2, 2, 2),
+                Actions.fadeOut(100)));
         mainStage.addActor(spaceShip);
-        uiStage.addActor(labels.getTimeLabel());
-        uiStage.addActor(win);
+
+        userInterface.addActor(labels.getTimeLabel());
+        userInterface.addActor(win);
     }
 
     /**
      * defines the scene camera and respective placement
+     *
      * @return camera
      */
     private void camera() {
@@ -203,47 +181,29 @@ public class FirstLevel implements Screen {
 
         //bounds the camera to the window
         gameCamera.position.x = MathUtils.clamp(gameCamera.position.x,
-                viewWidth / 2, mapWidth - viewWidth / 2);
+                getWidth() / 2, mapWidth - getWidth() / 2);
 
         gameCamera.position.y = MathUtils.clamp(gameCamera.position.y,
-                viewHeight / 2, mapHeight - viewHeight / 2);
+                getHeight() / 2, mapHeight - getHeight() / 2);
 
         gameCamera.update();
     }
 
-    // ====== required methods for screen ======
-    @Override
-    public void resize(int width, int height) {
+    //key input to go to menu or pause the game
+    public boolean keyDown(int keycode) {
+        if (keycode == Keys.M) {
+            game.setScreen(new GameMainMenu(game));
+        }
+
+        if (keycode == Keys.P) {
+            togglePaused();
+        }
+
+        return false;
     }
 
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    //testing actions spinning the meteor sprite game over end screen flashing tint
-    private final Action spinMeRoundBaby = Actions.parallel(
-            Actions.alpha(1),
-            Actions.rotateBy(360 * 5, 30),
-            Actions.scaleTo(2, 2, 2),
-            Actions.fadeOut(100)
-    );
-    private final Action gameOver = Actions.sequence(
+    //action to blink game over
+    public Action gameOver = Actions.sequence(
             Actions.alpha(0),
             Actions.show(),
             Actions.fadeIn(25),
@@ -254,5 +214,3 @@ public class FirstLevel implements Screen {
             )
     );
 }
-
-
