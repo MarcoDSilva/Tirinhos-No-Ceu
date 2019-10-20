@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.Camera;
-import com.mygdx.game.BasicActor;
+import com.mygdx.game.BaseActor;
 import com.mygdx.game.CommonScreen;
 import com.mygdx.game.LabelTextGround;
 
@@ -28,10 +28,10 @@ import com.mygdx.game.LabelTextGround;
 public class FirstLevel extends CommonScreen {
 
     //==== Stage | Actors | Camera ====
-    private BasicActor spaceShip;
-    private BasicActor meteor;
-    private BasicActor background;
-    private BasicActor win;
+    private BaseActor spaceShip;
+    private BaseActor meteor;
+    private BaseActor background;
+    private BaseActor win;
     private Camera gameCamera;
     private LabelTextGround labels;
     //==== constants for game size and window size ===
@@ -112,11 +112,11 @@ public class FirstLevel extends CommonScreen {
      * @return actors
      */
     private void initActor() {
-        background = new BasicActor();
-        spaceShip = new BasicActor();
+        background = new BaseActor();
+        spaceShip = new BaseActor();
 
-        meteor = new BasicActor();
-        win = new BasicActor();
+        meteor = new BaseActor();
+        win = new BaseActor();
         labels = new LabelTextGround();
     }
 

@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.Color;
  *
  * @author MarcoSilva
  */
-public class BasicActor extends Actor {
+public class BaseActor extends Actor {
 
     // ====== object properties =====
     private final TextureRegion texture;
@@ -24,7 +24,7 @@ public class BasicActor extends Actor {
     private float velocityY;
 
     //constructor with Actor methods
-    public BasicActor() {
+    public BaseActor() {
         super();
         texture = new TextureRegion();
         boundary = new Rectangle();

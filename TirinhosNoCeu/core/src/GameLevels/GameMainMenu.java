@@ -1,6 +1,6 @@
 package GameLevels;
 
-import com.mygdx.game.BasicActor;
+import com.mygdx.game.BaseActor;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -55,11 +55,11 @@ public class GameMainMenu extends CommonScreen {
      * @return menu design
      */
     public void init() {
-        BasicActor background = new BasicActor();
+        BaseActor background = new BaseActor();
         background.setTexture(new Texture(Gdx.files.internal("purple.png")));
         userInterface.addActor(background);
 
-        BasicActor textTitle = new BasicActor();
+        BaseActor textTitle = new BaseActor();
         textTitle.setTexture(new Texture(Gdx.files.internal("title.png")));
         textTitle.setPosition(30, 310);
         userInterface.addActor(textTitle);
