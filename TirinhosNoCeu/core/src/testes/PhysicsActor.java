@@ -34,10 +34,11 @@ public class PhysicsActor extends AnimationActors {
     }
 
     /**
-     * sets the velocity with angle/magnitude which translates roughly in x = magnitude * cos(angle) y = magnitude * sin(angle)
+     * sets the velocity with angle/magnitude 
+     * which translates roughly in x = magnitude * cos(angle) y = magnitude * sin(angle)
      *
-     * @param vx
-     * @param vy
+     * @param velocityX
+     * @param velocityY
      */
     public void setVelocityXY(float velocityX, float velocityY) {
         velocity.set(velocityX, velocityY);
@@ -46,8 +47,8 @@ public class PhysicsActor extends AnimationActors {
     /**
      * adds the velocity with angle/magnitude
      *
-     * @param vx
-     * @param vy
+     * @param velocityX
+     * @param velocityY
      */
     public void addVelocity(float velocityX, float velocityY) {
         velocity.add(velocityX, velocityY);
@@ -67,8 +68,8 @@ public class PhysicsActor extends AnimationActors {
     /**
      * acceleration set method
      *
-     * @param ax
-     * @param ay
+     * @param accelX
+     * @param accelY
      */
     public void setAccelerationXY(float accelX, float accelY) {
         acceleration.set(accelX, accelY);
@@ -125,26 +126,25 @@ public class PhysicsActor extends AnimationActors {
         angleChanged = bool;
     }
 
-    /*
+    
     public void accelerateForward(float speed) {
-        setAccelerationAS(rotationOfTextureFromAnimation, speed);
-    }*/
+        setAccelerationAS(getRotation(), speed);
+    }
     
     /**
-     * changes velocity according to acceleration and deltaTime
-     * decrease speed when not accelerating
-     * if actual speed is greater than maximumSpeed, keep the speed at that max value
-     * change position according to velocity and deltaTime
-     * if angle is true, rotates the actor equal to that direction motion
-     * @param deltaTime 
+     * changes velocity according to acceleration and deltaTime decrease speed when not accelerating if actual speed is greater than maximumSpeed, keep the speed at that max value change position according to velocity and deltaTime if angle is true, rotates the actor equal to that direction motion
+     *
+     * @param deltaTime
      */
+    @Override
     public void act(float deltaTime) {
         //super act for animation actors
+        super.act(deltaTime);
 
         //apply accel
         velocity.add(acceleration.x * deltaTime, acceleration.y * deltaTime);
 
-        //decreasing vel. when not speeding
+        //decreasing vel. when not getting any accel
         if (acceleration.len() < 0.01) {
             float decelAmount = deceleration * deltaTime;
             if (getSpeed() < decelAmount) {
@@ -153,16 +153,20 @@ public class PhysicsActor extends AnimationActors {
                 setSpeed(getSpeed() - decelAmount);
             }
         }
-        
-        //no more speed than the maximum OVERDRIVE
+
+        //no more speed allowed than the maximum OVERDRIVE
         if (getSpeed() > maximumSpeed) {
             setSpeed(maximumSpeed);
         }
-        
-        //getting that sweet speed
-        //moving the actor from animationactor class here
-        //rotate the img here
-        
+
+        //adding X and Y to the current position of the element
+        moveBy(velocity.x * deltaTime, velocity.y * deltaTime);
+
+        //rotate the img here according to the speed being greater than 1
+        //and the anglechanged being true
+        if (angleChanged && getSpeed() > 0.1) {
+            setRotation(getMotionAngle());
+        }
     }
     
 }

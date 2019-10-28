@@ -190,6 +190,7 @@ public class FirstLevel extends CommonScreen {
     }
 
     //key input to go to menu or pause the game
+    @Override
     public boolean keyDown(int keycode) {
         if (keycode == Keys.M) {
             game.setScreen(new GameMainMenu(game));

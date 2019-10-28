@@ -48,6 +48,7 @@ public class BasicActor extends Actor {
      *
      * @param delta
      */
+    @Override
     public void act(float delta) {
         super.act(delta);
     }
@@ -81,7 +82,7 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * initializes a polygon with the shape of an ellipse To calculate the coordinates some trigonometric functions are required we use sine and cosine to make this ellipse (or a circle if needed)
+     * initializes a polygon with the shape of an ellipse To calculate the coordinates some trigonometric functions are required. we use sine and cosine to make this ellipse (or a circle if needed)
      *
      */
     public void setEllipseBoundary() {
@@ -90,9 +91,7 @@ public class BasicActor extends Actor {
         float height = getHeight();
         float[] vertices = new float[2 * numberOfVertices];
 
-        /**
-         * radians are used inside a loop, to calculate the spaces for the vertices equally through the ellipse. These are calculated with an interval of [0,6.28] pi which is roughly 360 degrees
-         */
+        // radians are used inside a loop, to calculate the spaces for the vertices equally through the ellipse. These are calculated with an interval of [0,6.28] pi which is roughly 360 degrees
         float radians = 0.0f;
 
         for (int i = 0; i < numberOfVertices; i++) {
@@ -118,7 +117,7 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * Verifies if 2 polygons overlap with each other if objOverlap is true which means overlap happened, we translate the actor until they stop colliding/overlap with each other
+     * Verifies if 2 polygons overlap with each other. if objOverlap is true which means overlap happened, we translate the actor until they stop colliding/overlap with each other
      *
      * @param extraActor
      * @param objOverlap
@@ -177,8 +176,10 @@ public class BasicActor extends Actor {
      * Clones the actual object
      *
      * @return BasicActor
+     * @throws java.lang.CloneNotSupportedException
      */
-    public BasicActor clone() {
+    @Override
+    public BasicActor clone() throws CloneNotSupportedException {
         BasicActor cloned = new BasicActor();
         cloned.copy(this);
         return cloned;

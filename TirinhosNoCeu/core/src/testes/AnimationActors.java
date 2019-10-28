@@ -46,7 +46,8 @@ public class AnimationActors extends BasicActor {
     }
 
     /**
-     *
+     * To store the frame you need to pass the key required to identify the animation
+     * and the corresponding texture.
      * @param key
      * @param texture
      */
@@ -84,7 +85,6 @@ public class AnimationActors extends BasicActor {
         Texture texture = activateAnimation.getKeyFrame(elapsedTime).getTexture();
         setWidth(texture.getWidth());
         setHeight(texture.getHeight());
-
     }
 
     @Override
