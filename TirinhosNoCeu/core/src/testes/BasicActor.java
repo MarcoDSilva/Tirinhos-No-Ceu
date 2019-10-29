@@ -176,10 +176,9 @@ public class BasicActor extends Actor {
      * Clones the actual object
      *
      * @return BasicActor
-     * @throws java.lang.CloneNotSupportedException
      */
     @Override
-    public BasicActor clone() throws CloneNotSupportedException {
+    public BasicActor clone() {
         BasicActor cloned = new BasicActor();
         cloned.copy(this);
         return cloned;

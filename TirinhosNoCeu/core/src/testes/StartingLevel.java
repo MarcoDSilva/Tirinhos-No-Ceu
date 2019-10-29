@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -21,7 +22,8 @@ public class StartingLevel extends CommonScreen {
     private BasicActor win;
     private PhysicsActor spaceShip;
     private PhysicsActor meteor;
-
+    private ArrayList<PhysicsActor> meteors;
+    private int[] meteorCoordinates = {100, 10, 200, 20, 200, 30, 100, 40};
     //=== game size ===
     private final float mapWidth = 800;
     private final float mapHeight = 800;
@@ -51,19 +53,27 @@ public class StartingLevel extends CommonScreen {
     }
 
     // =================== ALL THE METHODS ARE BELOW THIS LINE ===================
-    
     /**
      * all the actors that need to be instantiated are here for a better code reading
      */
-    private void initActor() {
+    private void initActor()  {
         background = new BasicActor();
         win = new BasicActor();
         spaceShip = new PhysicsActor();
         meteor = new PhysicsActor();
         labels = new LabelTextGround();
+        meteors = new ArrayList<>();
+
+        //coordinates for the meteors being cloned
+        for (int i = 0; i < 4; i++) {
+            BasicActor meteorClone = meteor.clone();
+
+            meteorClone.setPosition(meteorCoordinates[2 * i], meteorCoordinates[2 * i + 1]);
+            mainStage.addActor(meteorClone);
+            meteors.add((PhysicsActor) meteorClone);
+        }
     }
 
-    
     /**
      * all the textures that need to be instantiated are here
      */
