@@ -64,7 +64,7 @@ public class FirstLevel extends CommonScreen {
         labels.setTimeElapsed(deltaTime);
         labels.setText("Time: " + (int) labels.getTimeElapsed());
         collision();
-        camera();
+       // camera();
     }
 
     /**
@@ -140,7 +140,7 @@ public class FirstLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
-        spaceShip.setPosition(10, 10);
+        spaceShip.setPosition(getWidth() / 2, getHeight() / 2);
         meteor.setPosition(200, 350);
         win.setPosition(0, 0);
     }
@@ -171,23 +171,23 @@ public class FirstLevel extends CommonScreen {
      *
      * @return camera
      */
-    private void camera() {
-        gameCamera = mainStage.getCamera();
-
-        //camera here it's centered on the player
-        //uses the clamp method , gets both axis for position and size to calculate
-        gameCamera.position.set(spaceShip.getX() + spaceShip.getOriginX(),
-                spaceShip.getY() + spaceShip.getOriginY(), 0);
-
-        //bounds the camera to the window
-        gameCamera.position.x = MathUtils.clamp(gameCamera.position.x,
-                getWidth() / 2, mapWidth - getWidth() / 2);
-
-        gameCamera.position.y = MathUtils.clamp(gameCamera.position.y,
-                getHeight() / 2, mapHeight - getHeight() / 2);
-
-        gameCamera.update();
-    }
+//    private void camera() {
+//        gameCamera = mainStage.getCamera();
+//
+//        //camera here it's centered on the player
+//        //uses the clamp method , gets both axis for position and size to calculate
+//        gameCamera.position.set(spaceShip.getX() + spaceShip.getOriginX(),
+//                spaceShip.getY() + spaceShip.getOriginY(), 0);
+//
+//        //bounds the camera to the window
+//        gameCamera.position.x = MathUtils.clamp(gameCamera.position.x,
+//                getWidth() / 2, mapWidth - getWidth() / 2);
+//
+//        gameCamera.position.y = MathUtils.clamp(gameCamera.position.y,
+//                getHeight() / 2, mapHeight - getHeight() / 2);
+//
+//        gameCamera.update();
+//    }
 
     //key input to go to menu or pause the game
     @Override

@@ -7,7 +7,7 @@
  */
 package com.mygdx.game;
 
-import GameLevels.*;
+import GameLevels.GameMainMenu;
 import com.badlogic.gdx.Game;
 
 /**

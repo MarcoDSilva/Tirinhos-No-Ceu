@@ -8,12 +8,19 @@ package testes;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author EFA
+ * @author Marco Silva
  */
 public class StartingLevel extends CommonScreen {
 
@@ -23,10 +30,10 @@ public class StartingLevel extends CommonScreen {
     private PhysicsActor spaceShip;
     private PhysicsActor meteor;
     private ArrayList<PhysicsActor> meteors;
-    private int[] meteorCoordinates = {100, 10, 200, 20, 200, 30, 100, 40};
+    private final int[] meteorCoordinates = {100, 10, 200, 20, 200, 30, 100, 40};
     //=== game size ===
-    private final float mapWidth = 800;
-    private final float mapHeight = 800;
+    private final float mapWidth;
+    private final float mapHeight;
 
     //=== label for score ===
     private LabelTextGround labels;
@@ -34,6 +41,8 @@ public class StartingLevel extends CommonScreen {
     // ===== CONSTRUCTOR =====
     public StartingLevel(Game game) {
         super(game);
+        mapHeight = 800;
+        mapWidth = 800;
     }
 
     /**
@@ -41,37 +50,44 @@ public class StartingLevel extends CommonScreen {
      */
     @Override
     public void create() {
-        initActor();
+        try {
+            initActor();
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(StartingLevel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initTextures();
         initPositions();
-        initActors();
+        initActors();       
     }
 
     @Override
     public void update(float deltaTime) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        playerMovement(deltaTime);
+        collisions();
     }
 
     // =================== ALL THE METHODS ARE BELOW THIS LINE ===================
     /**
      * all the actors that need to be instantiated are here for a better code reading
      */
-    private void initActor()  {
+    private void initActor() throws CloneNotSupportedException {
         background = new BasicActor();
         win = new BasicActor();
         spaceShip = new PhysicsActor();
         meteor = new PhysicsActor();
+        meteor.setEllipseBoundary();
+
         labels = new LabelTextGround();
         meteors = new ArrayList<>();
 
         //coordinates for the meteors being cloned
-        for (int i = 0; i < 4; i++) {
-            BasicActor meteorClone = meteor.clone();
-
-            meteorClone.setPosition(meteorCoordinates[2 * i], meteorCoordinates[2 * i + 1]);
-            mainStage.addActor(meteorClone);
-            meteors.add((PhysicsActor) meteorClone);
-        }
+//        for (int i = 0; i < 4; i++) {
+//            BasicActor meteorClone = meteor.clone();
+//
+//            meteorClone.setPosition(meteorCoordinates[2 * i], meteorCoordinates[2 * i + 1]);
+//            mainStage.addActor(meteorClone);
+//            meteors.add((PhysicsActor) meteorClone);
+//        }
     }
 
     /**
@@ -79,9 +95,10 @@ public class StartingLevel extends CommonScreen {
      */
     private void initTextures() {
         background.setTexture(new Texture(Gdx.files.internal("blueBackground.png")));
-        win.setTexture(new Texture(Gdx.files.internal("")));
-        spaceShip.setTexture(new Texture(Gdx.files.internal("")));
-        meteor.setTexture(new Texture(Gdx.files.internal("")));
+        win.setTexture(new Texture(Gdx.files.internal("end.png")));
+        win.setVisible(false);
+        spaceShip.setTexture(new Texture(Gdx.files.internal("playerShip.png")));
+        meteor.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
     }
 
     /**
@@ -89,8 +106,14 @@ public class StartingLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
-        spaceShip.setPosition(mapWidth / 2, mapHeight / 2);
-        meteor.setPosition(mapWidth / 10, mapHeight / 10);
+        
+        spaceShip.setPosition(400, 250);
+        spaceShip.setRotation(90);
+        spaceShip.setEllipseBoundary();
+        spaceShip.setMaxSpeed(500);
+        spaceShip.setDeceleration(125);
+        meteor.setPosition(mapWidth / 3, mapHeight / 3);
+        
         win.setPosition(0, 0);
     }
 
@@ -103,4 +126,54 @@ public class StartingLevel extends CommonScreen {
         mainStage.addActor(spaceShip);
         mainStage.addActor(meteor);
     }
+
+    /**
+     * player movement properties, and key listeners
+     */
+    private void playerMovement(float deltaTime) {
+        spaceShip.setAccelerationAS(0, 0);
+
+        //KEYS INPUT
+        if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
+            spaceShip.rotateBy(90 * deltaTime);
+        }
+        if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
+            spaceShip.rotateBy(-90 * deltaTime);
+        }
+        if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
+            spaceShip.accelerateForward(150);
+        }
+        if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+            spaceShip.decelerateSpeed(30);
+        }
+
+        //margin avoider which will be margin transioner
+        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0,
+                getWidth() - spaceShip.getWidth()));
+        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0,
+                getHeight() - spaceShip.getHeight()));
+    }
+    
+    /**
+     * detects the collision between game objects
+     */
+    private void collisions() {
+        if(spaceShip.overlap(meteor, true)) {
+            win.addAction(gameOver);
+            win.setVisible(true);
+        }
+    }
+    
+    //action to blink game over
+    public Action gameOver = Actions.sequence(
+            Actions.alpha(0),
+            Actions.show(),
+            Actions.fadeIn(25),
+            Actions.sequence(
+                    //shade color
+                    Actions.color(new Color(1, 0, 0, 1), 1),
+                    Actions.color(new Color(0, 0, 0, 1), 1)
+            )
+    );
+
 }

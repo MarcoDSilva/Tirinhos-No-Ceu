@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.CommonScreen;
+import testes.StartingLevel;
 
 /**
  *
@@ -38,7 +39,7 @@ public class GameMainMenu extends CommonScreen {
     public boolean keyDown(int keycode) {
         //if key pressed is one of the above
         if (keycode == Keys.ENTER) {
-            game.setScreen(new FirstLevel(game));
+            game.setScreen(new StartingLevel(game));
         }
 
         if (keycode == Keys.ESCAPE) {

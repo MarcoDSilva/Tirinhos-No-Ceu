@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Intersector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -152,8 +154,8 @@ public class BasicActor extends Actor {
      * @param original
      */
     public void copy(BasicActor original) {
-        this.texture = new TextureRegion(original.texture);
-
+        //this.texture = new TextureRegion(original.texture);
+        original.texture = this.texture;
         //if the passed actor has information, copies it into the actual object
         if (original.boundariesOfPolygon != null) {
             this.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
@@ -176,11 +178,19 @@ public class BasicActor extends Actor {
      * Clones the actual object
      *
      * @return BasicActor
+     * @throws java.lang.CloneNotSupportedException
      */
-    @Override
-    public BasicActor clone() {
-        BasicActor cloned = new BasicActor();
-        cloned.copy(this);
-        return cloned;
-    }
+    
+//    @Override
+//    public BasicActor clone() throws CloneNotSupportedException {
+//        try {
+//            Object clone = super.clone();
+//        } catch (CloneNotSupportedException ex) {
+//            Logger.getLogger(BasicActor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        BasicActor theCopy = new BasicActor();
+//        theCopy.copy(this);
+//        
+//        return theCopy;
+//    }
 }

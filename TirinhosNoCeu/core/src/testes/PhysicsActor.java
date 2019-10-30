@@ -14,8 +14,8 @@ import com.badlogic.gdx.math.MathUtils;
 public class PhysicsActor extends AnimationActors {
 
     //==== class properties ======
-    private Vector2 velocity;
-    private Vector2 acceleration;
+    private final Vector2 velocity;
+    private final Vector2 acceleration;
 
     //max speed and reducing speed variables below
     private float maximumSpeed;
@@ -129,6 +129,14 @@ public class PhysicsActor extends AnimationActors {
     
     public void accelerateForward(float speed) {
         setAccelerationAS(getRotation(), speed);
+    }
+    /**
+     * in case the user try to reduce the speed while the object is in movement
+     * we try to call the set method and take out X ammount from the actual speed
+     * @param speed 
+     */
+    public void decelerateSpeed(float speed) {
+        setAccelerationAS(getRotation(), getSpeed() - speed);
     }
     
     /**
