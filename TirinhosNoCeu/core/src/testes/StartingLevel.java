@@ -57,7 +57,7 @@ public class StartingLevel extends CommonScreen {
         }
         initTextures();
         initPositions();
-        initActors();       
+        initActors();
     }
 
     @Override
@@ -106,14 +106,16 @@ public class StartingLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
-        
         spaceShip.setPosition(400, 250);
-        spaceShip.setRotation(90);
+
+        if (spaceShip.getWidth() == 0) {
+            spaceShip.setOrigin(getWidth() / 2, getHeight() / 2);
+        }
+        spaceShip.setMaxSpeed(300);
+        spaceShip.setDeceleration(35);
         spaceShip.setEllipseBoundary();
-        spaceShip.setMaxSpeed(500);
-        spaceShip.setDeceleration(125);
-        meteor.setPosition(mapWidth / 3, mapHeight / 3);
         
+        meteor.setPosition(22, 222);
         win.setPosition(0, 0);
     }
 
@@ -131,39 +133,36 @@ public class StartingLevel extends CommonScreen {
      * player movement properties, and key listeners
      */
     private void playerMovement(float deltaTime) {
-        spaceShip.setAccelerationAS(0, 0);
+        spaceShip.setAccelerationXY(0, 0);
 
         //KEYS INPUT
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-            spaceShip.rotateBy(90 * deltaTime);
+            spaceShip.rotateBy(180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-            spaceShip.rotateBy(-90 * deltaTime);
+            spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.accelerateForward(150);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 100);
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
             spaceShip.decelerateSpeed(30);
         }
 
         //margin avoider which will be margin transioner
-        spaceShip.setX(MathUtils.clamp(spaceShip.getX(), 0,
-                getWidth() - spaceShip.getWidth()));
-        spaceShip.setY(MathUtils.clamp(spaceShip.getY(), 0,
-                getHeight() - spaceShip.getHeight()));
+      
     }
-    
+
     /**
      * detects the collision between game objects
      */
     private void collisions() {
-        if(spaceShip.overlap(meteor, true)) {
+        if (spaceShip.overlap(meteor, true)) {
             win.addAction(gameOver);
             win.setVisible(true);
         }
     }
-    
+
     //action to blink game over
     public Action gameOver = Actions.sequence(
             Actions.alpha(0),

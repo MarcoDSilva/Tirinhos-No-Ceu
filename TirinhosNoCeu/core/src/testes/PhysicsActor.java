@@ -34,8 +34,7 @@ public class PhysicsActor extends AnimationActors {
     }
 
     /**
-     * sets the velocity with angle/magnitude 
-     * which translates roughly in x = magnitude * cos(angle) y = magnitude * sin(angle)
+     * sets the velocity with angle/magnitude which translates roughly in x = magnitude * cos(angle) y = magnitude * sin(angle)
      *
      * @param velocityX
      * @param velocityY
@@ -86,6 +85,15 @@ public class PhysicsActor extends AnimationActors {
     }
 
     /**
+     * adjust the actor accel by drifting adding extra accel to the other side
+     * @param ang
+     * @param amm 
+     */
+    public void addAccelerationAS(float ang, float amm) {
+        acceleration.add(amm * MathUtils.cosDeg(ang), amm * MathUtils.sinDeg(ang));
+    }
+
+    /**
      * set acceleration with angle and speed
      *
      * @param angleDegree
@@ -109,36 +117,36 @@ public class PhysicsActor extends AnimationActors {
     public float getSpeed() {
         return velocity.len();
     }
-    
+
     public void setSpeed(float speed) {
         velocity.setLength(speed);
     }
-    
+
     public void setMaxSpeed(float maxSpeed) {
         maximumSpeed = maxSpeed;
     }
-    
+
     public float getMotionAngle() {
         return MathUtils.atan2(maximumSpeed, maximumSpeed);
     }
-    
+
     public void setAutoAngle(boolean bool) {
         angleChanged = bool;
     }
 
-    
     public void accelerateForward(float speed) {
         setAccelerationAS(getRotation(), speed);
     }
+
     /**
-     * in case the user try to reduce the speed while the object is in movement
-     * we try to call the set method and take out X ammount from the actual speed
-     * @param speed 
+     * in case the user try to reduce the speed while the object is in movement we try to call the set method and take out X ammount from the actual speed
+     *
+     * @param speed
      */
     public void decelerateSpeed(float speed) {
         setAccelerationAS(getRotation(), getSpeed() - speed);
     }
-    
+
     /**
      * changes velocity according to acceleration and deltaTime decrease speed when not accelerating if actual speed is greater than maximumSpeed, keep the speed at that max value change position according to velocity and deltaTime if angle is true, rotates the actor equal to that direction motion
      *
@@ -176,5 +184,5 @@ public class PhysicsActor extends AnimationActors {
             setRotation(getMotionAngle());
         }
     }
-    
+
 }

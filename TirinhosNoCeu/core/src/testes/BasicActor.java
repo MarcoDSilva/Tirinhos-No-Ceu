@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Intersector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -61,7 +59,7 @@ public class BasicActor extends Actor {
      * @param batch
      * @param alpha
      */
-    @Override
+    
     public void draw(Batch batch, float alpha) {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a); //RGB, Alpha
@@ -93,14 +91,19 @@ public class BasicActor extends Actor {
         float height = getHeight();
         float[] vertices = new float[2 * numberOfVertices];
 
-        // radians are used inside a loop, to calculate the spaces for the vertices equally through the ellipse. These are calculated with an interval of [0,6.28] pi which is roughly 360 degrees
-        float radians = 0.0f;
+        /**
+         * radians are used inside a loop
+         * to calculate the spaces for the vertices equally through the ellipse. 
+         * These are calculated with an interval of [0,6.28] pi 
+         * which is roughly 360 degrees
+         **/
+        float radians;
 
         for (int i = 0; i < numberOfVertices; i++) {
             radians = i * 6.28f / numberOfVertices;
 
-            vertices[2 * i] = width / 2 * MathUtils.cos(i) + width / 2;
-            vertices[2 * i] = height / 2 * MathUtils.sin(i) + height / 2;
+            vertices[2 * i] = width / 2 * MathUtils.cos(radians) + width / 2;
+            vertices[2 * i + 1] = height / 2 * MathUtils.sin(radians) + height / 2;
         }
 
         boundariesOfPolygon = new Polygon(vertices);
@@ -119,7 +122,9 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * Verifies if 2 polygons overlap with each other. if objOverlap is true which means overlap happened, we translate the actor until they stop colliding/overlap with each other
+     * Verifies if 2 polygons overlap with each other. 
+     * if objOverlap is true which means overlap happened, 
+     * we translate the actor until they stop colliding/overlap with each other
      *
      * @param extraActor
      * @param objOverlap
@@ -154,9 +159,11 @@ public class BasicActor extends Actor {
      * @param original
      */
     public void copy(BasicActor original) {
-        //this.texture = new TextureRegion(original.texture);
-        original.texture = this.texture;
+        this.texture = new TextureRegion(original.texture);
+        
+        //original.texture = this.texture;
         //if the passed actor has information, copies it into the actual object
+        
         if (original.boundariesOfPolygon != null) {
             this.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
             this.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
