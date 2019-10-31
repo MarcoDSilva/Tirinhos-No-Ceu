@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import static com.badlogic.gdx.math.MathUtils.random;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.*;
@@ -31,7 +32,7 @@ public class StartingLevel extends CommonScreen {
     private PhysicsActor spaceShip;
     private PhysicsActor meteor;
     private ArrayList<PhysicsActor> meteors;
-    private final int[] meteorCoordinates = {100, 10, 200, 20, 200, 30, 100, 40};
+
     //=== game size ===
     private final float mapWidth;
     private final float mapHeight;
@@ -79,16 +80,20 @@ public class StartingLevel extends CommonScreen {
         meteor.setEllipseBoundary();
 
         labels = new LabelTextGround();
-        meteors = new ArrayList<>();
+        meteors = new ArrayList();
 
-        //coordinates for the meteors being cloned
-//        for (int i = 0; i < 4; i++) {
-//            BasicActor meteorClone = meteor.clone();
-//
-//            meteorClone.setPosition(meteorCoordinates[2 * i], meteorCoordinates[2 * i + 1]);
-//            mainStage.addActor(meteorClone);
-//            meteors.add((PhysicsActor) meteorClone);
-//        }
+        //coordinates for the meteors being cloned 
+        for(int i = 0; i < 8; i++) {
+            int randX = random.nextInt(800);
+            int randY = random.nextInt(800);
+            
+            PhysicsActor meteorClone = new PhysicsActor();
+            meteorClone.copy(meteor);
+            meteorClone.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
+            meteorClone.setPosition(randX,randY);
+            meteors.add(meteorClone);
+        }        
+       
     }
 
     /**
@@ -110,12 +115,15 @@ public class StartingLevel extends CommonScreen {
 
         spaceShip.setPosition(400, 250);
 
+        /**
+         * if the spaceship with isn't equal to 0 we define the origin of the movement to the center of the object
+         */
         if (spaceShip.getWidth() != 0) {
             spaceShip.setOrigin(spaceShip.getWidth() / 2, spaceShip.getHeight() / 2);
         }
 
-        spaceShip.setMaxSpeed(500);
-        spaceShip.setDeceleration(100);
+        spaceShip.setMaxSpeed(1500);
+        spaceShip.setDeceleration(200);
         spaceShip.setEllipseBoundary();
         spaceShip.setRotation(90);
 
@@ -129,8 +137,16 @@ public class StartingLevel extends CommonScreen {
     private void initActors() {
         mainStage.addActor(background);
         mainStage.addActor(meteor);
+        for (PhysicsActor meteorClones : meteors) {
+            mainStage.addActor(meteorClones);
+        }
+        
         mainStage.addActor(spaceShip);
+        labels = new LabelTextGround();
         mainStage.addActor(win);
+        
+
+        
     }
 
     /**
@@ -147,7 +163,7 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 133);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 350);
         }
         wrap();
     }
@@ -155,7 +171,8 @@ public class StartingLevel extends CommonScreen {
     /**
      * detects the collision between game objects
      */
-    private void collisions() {
+    private void collisions() {  
+        
         if (spaceShip.getBoundingPolygon().getBoundingRectangle().overlaps(meteor.getBoundingPolygon().getBoundingRectangle())) {
             win.addAction(gameOver);
             win.setVisible(true);

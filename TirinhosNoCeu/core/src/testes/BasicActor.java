@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Intersector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,6 +62,7 @@ public class BasicActor extends Actor {
      * @param batch
      * @param alpha
      */
+    @Override
     public void draw(Batch batch, float alpha) {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a); //RGB, Alpha
@@ -153,42 +156,41 @@ public class BasicActor extends Actor {
      * used to copy the data from the actor to another actor
      *
      * @param original
+     * @return 
      */
-    public void copy(BasicActor original) {
-        this.texture = new TextureRegion(original.texture);
+    public BasicActor copy(BasicActor original) {
+        BasicActor laCopia = new BasicActor();
+        laCopia.texture.setTexture(original.texture.getTexture());
 
-        //original.texture = this.texture;
+        //laCopia.texture = this.texture;
         //if the passed actor has information, copies it into the actual object
-        if (original.boundariesOfPolygon != null) {
-            this.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
-            this.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
+        if (laCopia.boundariesOfPolygon != null) {
+            laCopia.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
+            laCopia.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
         }
 
         //updates all positions, color and visibility info of the object copied
-        this.setPosition(original.getX(), original.getY());
-        this.setOriginX(original.getOriginX());
-        this.setOriginY(original.getOriginY());
+        laCopia.setPosition(original.getX(), original.getY());
+        laCopia.setOriginX(original.getOriginX());
+        laCopia.setOriginY(original.getOriginY());
 
-        this.setWidth(original.getWidth());
-        this.setHeight(original.getHeight());
+        laCopia.setWidth(original.getWidth());
+        laCopia.setHeight(original.getHeight());
 
-        this.setColor(original.getColor());
-        this.setVisible(original.isVisible());
+        laCopia.setColor(original.getColor());
+        laCopia.setVisible(original.isVisible());
+        
+        return laCopia;
     }
 
     /**
      * Clones the actual object
      *
      * @return BasicActor
-     * @throws java.lang.CloneNotSupportedException
      */
 //    @Override
-//    public BasicActor clone() throws CloneNotSupportedException {
-//        try {
-//            Object clone = super.clone();
-//        } catch (CloneNotSupportedException ex) {
-//            Logger.getLogger(BasicActor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+//    public BasicActor clone() throws CloneNotSupportedException{
+//       
 //        BasicActor theCopy = new BasicActor();
 //        theCopy.copy(this);
 //        
