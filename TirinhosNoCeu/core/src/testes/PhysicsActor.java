@@ -127,7 +127,7 @@ public class PhysicsActor extends AnimationActors {
     }
 
     public float getMotionAngle() {
-        return MathUtils.atan2(maximumSpeed, maximumSpeed);
+        return MathUtils.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees;
     }
 
     public void setAutoAngle(boolean bool) {

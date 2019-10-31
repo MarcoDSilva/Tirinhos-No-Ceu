@@ -106,17 +106,19 @@ public class StartingLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
+        
         spaceShip.setPosition(400, 250);
         
 
         if (spaceShip.getWidth() == 0) {
-            spaceShip.setOrigin(getWidth() / 2, getHeight() / 2);
+            spaceShip.setOrigin(spaceShip.getWidth() / 2, spaceShip.getHeight() / 2);
         }
-        spaceShip.setMaxSpeed(400);
-        spaceShip.setDeceleration(10);
+        spaceShip.setMaxSpeed(300);
+        spaceShip.setDeceleration(40);
         spaceShip.setEllipseBoundary();
+        spaceShip.setRotation(90);
         
-        meteor.setPosition(22, 222);
+        meteor.setPosition(22, 222);        
         win.setPosition(0, 0);
     }
 
@@ -126,8 +128,9 @@ public class StartingLevel extends CommonScreen {
     private void initActors() {
         mainStage.addActor(background);
         mainStage.addActor(win);
-        mainStage.addActor(spaceShip);
         mainStage.addActor(meteor);
+        mainStage.addActor(spaceShip);
+        
     }
 
     /**
@@ -144,11 +147,11 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 120);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 80);
         }
-        if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-            spaceShip.decelerateSpeed(10);
-        }
+//        if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+//            spaceShip.decelerateSpeed(20);
+//        }
         wrap();
     }
 
