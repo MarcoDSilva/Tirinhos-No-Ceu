@@ -1,6 +1,7 @@
 /*
  * Class that defines the physics required to manipulate the objects
  * will extend the animation actors because some animations will be inserted after
+ * Version alpha - 1.5.0
  */
 package testes;
 
@@ -86,8 +87,9 @@ public class PhysicsActor extends AnimationActors {
 
     /**
      * adjust the actor accel by drifting adding extra accel to the other side
+     *
      * @param ang
-     * @param amm 
+     * @param amm
      */
     public void addAccelerationAS(float ang, float amm) {
         acceleration.add(amm * MathUtils.cosDeg(ang), amm * MathUtils.sinDeg(ang));
@@ -127,7 +129,7 @@ public class PhysicsActor extends AnimationActors {
     }
 
     public float getMotionAngle() {
-        return MathUtils.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees;
+        return MathUtils.atan2(velocity.x, velocity.y) * MathUtils.radiansToDegrees;
     }
 
     public void setAutoAngle(boolean bool) {
@@ -136,15 +138,6 @@ public class PhysicsActor extends AnimationActors {
 
     public void accelerateForward(float speed) {
         setAccelerationAS(getRotation(), speed);
-    }
-
-    /**
-     * in case the user try to reduce the speed while the object is in movement we try to call the set method and take out X ammount from the actual speed
-     *
-     * @param speed
-     */
-    public void decelerateSpeed(float speed) {
-        setAccelerationAS(getRotation(), getSpeed() - speed);
     }
 
     /**

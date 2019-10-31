@@ -1,6 +1,7 @@
 /*
  *  actor class for the scene objects
  *  used for collisions
+ * Version alpha - 1.5.0
  */
 package testes;
 
@@ -59,7 +60,6 @@ public class BasicActor extends Actor {
      * @param batch
      * @param alpha
      */
-    
     public void draw(Batch batch, float alpha) {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a); //RGB, Alpha
@@ -92,11 +92,9 @@ public class BasicActor extends Actor {
         float[] vertices = new float[2 * numberOfVertices];
 
         /**
-         * radians are used inside a loop
-         * to calculate the spaces for the vertices equally through the ellipse. 
-         * These are calculated with an interval of [0,6.28] pi 
-         * which is roughly 360 degrees
-         **/
+         * radians are used inside a loop to calculate the spaces for the vertices equally through the ellipse. These are calculated with an interval of [0,6.28] pi which is roughly 360 degrees
+         *
+         */
         float radians;
 
         for (int i = 0; i < numberOfVertices; i++) {
@@ -122,9 +120,7 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * Verifies if 2 polygons overlap with each other. 
-     * if objOverlap is true which means overlap happened, 
-     * we translate the actor until they stop colliding/overlap with each other
+     * Verifies if 2 polygons overlap with each other. if objOverlap is true which means overlap happened, we translate the actor until they stop colliding/overlap with each other
      *
      * @param extraActor
      * @param objOverlap
@@ -160,10 +156,9 @@ public class BasicActor extends Actor {
      */
     public void copy(BasicActor original) {
         this.texture = new TextureRegion(original.texture);
-        
+
         //original.texture = this.texture;
         //if the passed actor has information, copies it into the actual object
-        
         if (original.boundariesOfPolygon != null) {
             this.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
             this.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
@@ -187,7 +182,6 @@ public class BasicActor extends Actor {
      * @return BasicActor
      * @throws java.lang.CloneNotSupportedException
      */
-    
 //    @Override
 //    public BasicActor clone() throws CloneNotSupportedException {
 //        try {

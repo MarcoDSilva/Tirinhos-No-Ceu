@@ -64,7 +64,7 @@ public class FirstLevel extends CommonScreen {
         labels.setTimeElapsed(deltaTime);
         labels.setText("Time: " + (int) labels.getTimeElapsed());
         collision();
-       // camera();
+        // camera();
     }
 
     /**
@@ -169,6 +169,7 @@ public class FirstLevel extends CommonScreen {
     /**
      * defines the scene camera and respective placement
      *
+     * @param keycode
      * @return camera
      */
 //    private void camera() {
@@ -188,7 +189,6 @@ public class FirstLevel extends CommonScreen {
 //
 //        gameCamera.update();
 //    }
-
     //key input to go to menu or pause the game
     @Override
     public boolean keyDown(int keycode) {

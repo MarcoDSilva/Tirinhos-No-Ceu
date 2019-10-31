@@ -1,6 +1,7 @@
 /*
 *animation class that extends the basic actor one
 *hashmaps are used to hold the animations, the first being the key, the 2nd being the animation itself
+ * Version alpha - 1.5.0
  */
 package testes;
 
@@ -32,9 +33,8 @@ public class AnimationActors extends BasicActor {
     }
 
     /**
-     * Here we update the hashmap that has the animations. 
-     * the key is a string , ie("Active") if the activeAnimation has no texture,
-     * aka null, then the first time we use this method we set that key and animation as active
+     * Here we update the hashmap that has the animations. the key is a string , ie("Active") if the activeAnimation has no texture, aka null, then the first time we use this method we set that key and animation as active
+     *
      * @param key
      * @param animation
      */
@@ -46,8 +46,8 @@ public class AnimationActors extends BasicActor {
     }
 
     /**
-     * To store the frame you need to pass the key required to identify the animation
-     * and the corresponding texture.
+     * To store the frame you need to pass the key required to identify the animation and the corresponding texture.
+     *
      * @param key
      * @param texture
      */
@@ -59,11 +59,7 @@ public class AnimationActors extends BasicActor {
     }
 
     /**
-     * Here we define the animation to be played. 
-     * If the Hashmap doesn't contain the key, 
-     * it returns that no animation exist and breaks the method 
-     * If the placeholder (activeName) is equal to the key, 
-     * it breaks this method right away. Else, activates that animation.
+     * Here we define the animation to be played. If the Hashmap doesn't contain the key, it returns that no animation exist and breaks the method If the placeholder (activeName) is equal to the key, it breaks this method right away. Else, activates that animation.
      *
      * @param key
      */

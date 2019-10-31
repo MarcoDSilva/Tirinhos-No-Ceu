@@ -5,6 +5,7 @@
  */
 package testes;
 
+import GameLevels.GameMainMenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -106,19 +107,19 @@ public class StartingLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
-        
-        spaceShip.setPosition(400, 250);
-        
 
-        if (spaceShip.getWidth() == 0) {
+        spaceShip.setPosition(400, 250);
+
+        if (spaceShip.getWidth() != 0) {
             spaceShip.setOrigin(spaceShip.getWidth() / 2, spaceShip.getHeight() / 2);
         }
-        spaceShip.setMaxSpeed(300);
-        spaceShip.setDeceleration(40);
+
+        spaceShip.setMaxSpeed(500);
+        spaceShip.setDeceleration(100);
         spaceShip.setEllipseBoundary();
         spaceShip.setRotation(90);
-        
-        meteor.setPosition(22, 222);        
+
+        meteor.setPosition(22, 222);
         win.setPosition(0, 0);
     }
 
@@ -127,17 +128,16 @@ public class StartingLevel extends CommonScreen {
      */
     private void initActors() {
         mainStage.addActor(background);
-        mainStage.addActor(win);
         mainStage.addActor(meteor);
         mainStage.addActor(spaceShip);
-        
+        mainStage.addActor(win);
     }
 
     /**
      * player movement properties, and key listeners
      */
     private void playerMovement(float deltaTime) {
-        spaceShip.setAccelerationXY(0, 0);
+        spaceShip.setAccelerationAS(0, 0);
 
         //KEYS INPUT
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
@@ -147,11 +147,8 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 80);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 133);
         }
-//        if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-//            spaceShip.decelerateSpeed(20);
-//        }
         wrap();
     }
 
@@ -159,29 +156,47 @@ public class StartingLevel extends CommonScreen {
      * detects the collision between game objects
      */
     private void collisions() {
-        if (spaceShip.overlap(meteor, true)) {
+        if (spaceShip.getBoundingPolygon().getBoundingRectangle().overlaps(meteor.getBoundingPolygon().getBoundingRectangle())) {
             win.addAction(gameOver);
             win.setVisible(true);
         }
     }
-    
+
     private void wrap() {
-        if(spaceShip.getX() < 0) {
+        if (spaceShip.getX() < 0) {
             spaceShip.setX(mapWidth);
         }
-        
-        if(spaceShip.getX() > mapWidth) {
+
+        if (spaceShip.getX() > mapWidth) {
             spaceShip.setX(0);
         }
-        
-        if(spaceShip.getY() < 0) {
+
+        if (spaceShip.getY() < 0) {
             spaceShip.setY(mapHeight);
         }
-        
-        if(spaceShip.getY() > mapHeight) {
+
+        if (spaceShip.getY() > mapHeight) {
             spaceShip.setY(0);
         }
-        
+    }
+
+    /**
+     * key listener for (M)enu and (P)ause
+     *
+     * @param keycode
+     * @return
+     */
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Keys.M) {
+            game.setScreen(new GameMainMenu(game));
+        }
+
+        if (keycode == Keys.P) {
+            togglePaused();
+        }
+
+        return false;
     }
 
     //action to blink game over
