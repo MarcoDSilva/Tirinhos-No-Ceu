@@ -107,12 +107,13 @@ public class StartingLevel extends CommonScreen {
     private void initPositions() {
         background.setPosition(0, 0);
         spaceShip.setPosition(400, 250);
+        
 
         if (spaceShip.getWidth() == 0) {
             spaceShip.setOrigin(getWidth() / 2, getHeight() / 2);
         }
-        spaceShip.setMaxSpeed(300);
-        spaceShip.setDeceleration(35);
+        spaceShip.setMaxSpeed(400);
+        spaceShip.setDeceleration(10);
         spaceShip.setEllipseBoundary();
         
         meteor.setPosition(22, 222);
@@ -143,14 +144,12 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 100);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 120);
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-            spaceShip.decelerateSpeed(30);
+            spaceShip.decelerateSpeed(10);
         }
-
-        //margin avoider which will be margin transioner
-      
+        wrap();
     }
 
     /**
@@ -161,6 +160,25 @@ public class StartingLevel extends CommonScreen {
             win.addAction(gameOver);
             win.setVisible(true);
         }
+    }
+    
+    private void wrap() {
+        if(spaceShip.getX() < 0) {
+            spaceShip.setX(mapWidth);
+        }
+        
+        if(spaceShip.getX() > mapWidth) {
+            spaceShip.setX(0);
+        }
+        
+        if(spaceShip.getY() < 0) {
+            spaceShip.setY(mapHeight);
+        }
+        
+        if(spaceShip.getY() > mapHeight) {
+            spaceShip.setY(0);
+        }
+        
     }
 
     //action to blink game over
