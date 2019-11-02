@@ -4,20 +4,17 @@
   <auxiliary>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-      <group>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/BasicActor.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/com/mygdx/game/TirinhosGame.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/StartingLevel.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/PhysicsActor.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/AnimationActors.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/GameLevels/GameMainMenu.java</file>
-        <file>file:/C:/Users/EFA/Desktop/EFA_Programacao/UF21/Projecto/github/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/GameLevels/FirstLevel.java</file>
-      </group>
+      <group/>
     </open-files>
     <editor-bookmarks lastBookmarkId="0" xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/desktop/src/com/mygdx/game/desktop/DesktopLauncher.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/GameLevels/FirstLevel.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/AnimationActors.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/com/mygdx/game/BaseActor.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/PhysicsActor.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/StartingLevel.java</file>
+        <file>file:/D:/Projectos_GameDev/Gamus/GitHub/TirinhosNoCeu/Tirinhos-No-Ceu/TirinhosNoCeu/core/src/testes/BasicActor.java</file>
       </group>
     </open-files>
   </auxiliary>

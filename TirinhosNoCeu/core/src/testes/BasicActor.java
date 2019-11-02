@@ -123,7 +123,10 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * Verifies if 2 polygons overlap with each other. if objOverlap is true which means overlap happened, we translate the actor until they stop colliding/overlap with each other
+     * Verifies if 2 polygons overlap with each other. 
+     * if objOverlap is true , the overlapping object is not solid.
+     * if it's false, we can consider the object solid, like a wall for example.
+     * then it translates the actor until they stop colliding/overlap with each other
      *
      * @param extraActor
      * @param objOverlap

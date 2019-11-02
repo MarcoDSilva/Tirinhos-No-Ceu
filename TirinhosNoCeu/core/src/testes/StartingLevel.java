@@ -83,17 +83,17 @@ public class StartingLevel extends CommonScreen {
         meteors = new ArrayList();
 
         //coordinates for the meteors being cloned 
-        for(int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             int randX = random.nextInt(800);
             int randY = random.nextInt(800);
-            
+
             PhysicsActor meteorClone = new PhysicsActor();
             meteorClone.copy(meteor);
             meteorClone.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
-            meteorClone.setPosition(randX,randY);
+            meteorClone.setPosition(randX, randY);
             meteors.add(meteorClone);
-        }        
-       
+        }
+
     }
 
     /**
@@ -128,6 +128,7 @@ public class StartingLevel extends CommonScreen {
         spaceShip.setRotation(90);
 
         meteor.setPosition(22, 222);
+        meteor.setEllipseBoundary();
         win.setPosition(0, 0);
     }
 
@@ -137,16 +138,18 @@ public class StartingLevel extends CommonScreen {
     private void initActors() {
         mainStage.addActor(background);
         mainStage.addActor(meteor);
+
+        //cloning the original meteor to create difference varieties
+        //setting it's hitbox to be one ellipse
         for (PhysicsActor meteorClones : meteors) {
+            meteorClones.setEllipseBoundary();
             mainStage.addActor(meteorClones);
         }
-        
+
         mainStage.addActor(spaceShip);
         labels = new LabelTextGround();
         mainStage.addActor(win);
-        
 
-        
     }
 
     /**
@@ -171,14 +174,18 @@ public class StartingLevel extends CommonScreen {
     /**
      * detects the collision between game objects
      */
-    private void collisions() {  
-        
-        if (spaceShip.getBoundingPolygon().getBoundingRectangle().overlaps(meteor.getBoundingPolygon().getBoundingRectangle())) {
-            win.addAction(gameOver);
-            win.setVisible(true);
+    private void collisions() {
+        for (PhysicsActor debries : meteors) {
+            if (spaceShip.overlap(debries, false)) {
+                win.addAction(gameOver);
+                win.setVisible(true);
+            }
         }
     }
 
+    /**
+     * makes the spaceship not "stuck" to the corners, and lets it pass to the other side
+     */
     private void wrap() {
         if (spaceShip.getX() < 0) {
             spaceShip.setX(mapWidth);
@@ -220,7 +227,7 @@ public class StartingLevel extends CommonScreen {
     public Action gameOver = Actions.sequence(
             Actions.alpha(0),
             Actions.show(),
-            Actions.fadeIn(25),
+            Actions.fadeIn(55),
             Actions.sequence(
                     //shade color
                     Actions.color(new Color(1, 0, 0, 1), 1),
