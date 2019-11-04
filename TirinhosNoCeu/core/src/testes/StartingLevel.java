@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,9 +27,14 @@ public class StartingLevel extends CommonScreen {
     //=== level elements ===  
     private BasicActor background;
     private BasicActor win;
+
     private PhysicsActor spaceShip;
     private PhysicsActor meteor;
+    private PhysicsActor laser;
+
+    //groups
     private ArrayList<PhysicsActor> meteors;
+    private ArrayList<PhysicsActor> lasers;
 
     //=== game size ===
     private final float mapWidth;
@@ -52,11 +55,7 @@ public class StartingLevel extends CommonScreen {
      */
     @Override
     public void create() {
-        try {
-            initActor();
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(StartingLevel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        initActor();
         initTextures();
         initPositions();
         initActors();
@@ -72,21 +71,25 @@ public class StartingLevel extends CommonScreen {
     /**
      * all the actors that need to be instantiated are here for a better code reading
      */
-    private void initActor() throws CloneNotSupportedException {
+    private void initActor() {
         background = new BasicActor();
         win = new BasicActor();
+
         spaceShip = new PhysicsActor();
         meteor = new PhysicsActor();
-        meteor.setEllipseBoundary();
-
+        laser = new PhysicsActor();
         labels = new LabelTextGround();
         meteors = new ArrayList();
+        lasers = new ArrayList();
 
         //coordinates for the meteors being cloned 
         for (int i = 0; i < 8; i++) {
             int randX = random.nextInt(800);
             int randY = random.nextInt(800);
 
+            /**
+             * TODO: avoid spawning meteors close or "inside" the ship
+             */
             PhysicsActor meteorClone = new PhysicsActor();
             meteorClone.copy(meteor);
             meteorClone.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
@@ -105,6 +108,7 @@ public class StartingLevel extends CommonScreen {
         win.setVisible(false);
         spaceShip.setTexture(new Texture(Gdx.files.internal("playerShip.png")));
         meteor.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
+        laser.setTexture(new Texture(Gdx.files.internal("laser.png")));
     }
 
     /**
@@ -115,20 +119,27 @@ public class StartingLevel extends CommonScreen {
 
         spaceShip.setPosition(400, 250);
 
-        /**
-         * if the spaceship with isn't equal to 0 we define the origin of the movement to the center of the object
-         */
         if (spaceShip.getWidth() != 0) {
             spaceShip.setOrigin(spaceShip.getWidth() / 2, spaceShip.getHeight() / 2);
         }
 
-        spaceShip.setMaxSpeed(1500);
-        spaceShip.setDeceleration(200);
+        //spaceship properties
+        spaceShip.setMaxSpeed(625);
+        spaceShip.setDeceleration(50);
         spaceShip.setEllipseBoundary();
         spaceShip.setRotation(90);
 
+        //meteor properties
         meteor.setPosition(22, 222);
         meteor.setEllipseBoundary();
+
+        //laser props
+        laser.setMaxSpeed(470);
+        laser.setDeceleration(0);
+        laser.setEllipseBoundary();
+
+        laser.setAutoAngle(true);
+
         win.setPosition(0, 0);
     }
 
@@ -149,7 +160,6 @@ public class StartingLevel extends CommonScreen {
         mainStage.addActor(spaceShip);
         labels = new LabelTextGround();
         mainStage.addActor(win);
-
     }
 
     /**
@@ -166,7 +176,11 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 350);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 125);
+        }
+
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+            System.out.println("PEW PEW");
         }
         wrap();
     }

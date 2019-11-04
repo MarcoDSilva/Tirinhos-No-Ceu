@@ -183,6 +183,7 @@ public class BasicActor extends Actor {
         laCopia.setColor(original.getColor());
         laCopia.setVisible(original.isVisible());
         
+        
         return laCopia;
     }
 
