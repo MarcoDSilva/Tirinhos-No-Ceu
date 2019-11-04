@@ -1,7 +1,7 @@
 /*
  *  actor class for the scene objects
  *  used for collisions
- * Version alpha - 1.5.0
+ * Version alpha - 1.8.0
  */
 package testes;
 
@@ -13,8 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Intersector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,12 +24,14 @@ public class BasicActor extends Actor {
     // ====== object properties =====
     private TextureRegion texture;
     private Polygon boundariesOfPolygon;
+    private ArrayList<? extends BasicActor> typeOfList;
 
     //constructor with Actor methods
     public BasicActor() {
         super();
         texture = new TextureRegion();
         boundariesOfPolygon = null;
+        typeOfList = null;
     }
 
     /**
@@ -123,10 +124,7 @@ public class BasicActor extends Actor {
     }
 
     /**
-     * Verifies if 2 polygons overlap with each other. 
-     * if objOverlap is true , the overlapping object is not solid.
-     * if it's false, we can consider the object solid, like a wall for example.
-     * then it translates the actor until they stop colliding/overlap with each other
+     * Verifies if 2 polygons overlap with each other. if objOverlap is true , the overlapping object is not solid. if it's false, we can consider the object solid, like a wall for example. then it translates the actor until they stop colliding/overlap with each other
      *
      * @param extraActor
      * @param objOverlap
@@ -159,7 +157,7 @@ public class BasicActor extends Actor {
      * used to copy the data from the actor to another actor
      *
      * @param original
-     * @return 
+     * @return
      */
     public BasicActor copy(BasicActor original) {
         BasicActor laCopia = new BasicActor();
@@ -182,9 +180,17 @@ public class BasicActor extends Actor {
 
         laCopia.setColor(original.getColor());
         laCopia.setVisible(original.isVisible());
-        
-        
+
         return laCopia;
+    }
+
+    /**
+     * reference to the type of list the actor was added to.
+     *
+     * @param typeOf
+     */
+    public void setTypeOfList(ArrayList<? extends BasicActor> typeOf) {
+        typeOfList = typeOf;
     }
 
     /**
@@ -200,4 +206,23 @@ public class BasicActor extends Actor {
 //        
 //        return theCopy;
 //    }
+    /**
+     * removes the element from the stage
+     */
+    public void destroy() {
+        remove();
+
+        if (typeOfList != null) {
+            typeOfList.remove(this);
+        }
+    }
+    
+    /**
+     * centers the object to the origin of the texture/position
+     */
+    public void centerOrigin(BasicActor t) {
+        this.setPosition(t.getX() + t.getOriginX() - this.getOriginX(), 
+                t.getY() + t.getOriginY() - this.getOriginY());
+    }
+    
 }

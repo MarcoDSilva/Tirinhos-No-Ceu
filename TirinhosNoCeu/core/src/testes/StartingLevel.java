@@ -1,7 +1,7 @@
 /*
  * Game Project - TirinhosNoCeu with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 1.5.0
+ * Version alpha - 1.8.0
  */
 package testes;
 
@@ -16,6 +16,8 @@ import static com.badlogic.gdx.math.MathUtils.random;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.*;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import java.util.ArrayList;
 
 /**
@@ -35,6 +37,10 @@ public class StartingLevel extends CommonScreen {
     //groups
     private ArrayList<PhysicsActor> meteors;
     private ArrayList<PhysicsActor> lasers;
+
+    //sounds
+    private Sound laserSound;
+    private float soundVolume;
 
     //=== game size ===
     private final float mapWidth;
@@ -75,12 +81,20 @@ public class StartingLevel extends CommonScreen {
         background = new BasicActor();
         win = new BasicActor();
 
+        //player and enemy
         spaceShip = new PhysicsActor();
         meteor = new PhysicsActor();
         laser = new PhysicsActor();
+
         labels = new LabelTextGround();
+
+        //grouping enemys and lasers
         meteors = new ArrayList();
         lasers = new ArrayList();
+
+        //audios
+        soundVolume = 0.75f;
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("pew_pew.ogg"));
 
         //coordinates for the meteors being cloned 
         for (int i = 0; i < 8; i++) {
@@ -181,6 +195,7 @@ public class StartingLevel extends CommonScreen {
 
         if (Gdx.input.isKeyPressed(Keys.SPACE)) {
             System.out.println("PEW PEW");
+            laserSound.play(soundVolume);
         }
         wrap();
     }
