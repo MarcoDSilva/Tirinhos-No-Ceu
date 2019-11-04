@@ -206,6 +206,7 @@ public class BasicActor extends Actor {
 //        
 //        return theCopy;
 //    }
+    
     /**
      * removes the element from the stage
      */
@@ -219,6 +220,7 @@ public class BasicActor extends Actor {
     
     /**
      * centers the object to the origin of the texture/position
+     * @param t
      */
     public void centerOrigin(BasicActor t) {
         this.setPosition(t.getX() + t.getOriginX() - this.getOriginX(), 
