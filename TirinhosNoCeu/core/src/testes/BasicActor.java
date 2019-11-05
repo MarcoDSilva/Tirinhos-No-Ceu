@@ -205,10 +205,10 @@ public class BasicActor extends Actor {
      */
     public void destroy() {
         remove();
-
         if (typeOfList != null) {
             typeOfList.remove(this);
         }
+
     }
 
     /**

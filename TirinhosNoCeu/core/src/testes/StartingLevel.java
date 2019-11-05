@@ -37,6 +37,7 @@ public class StartingLevel extends CommonScreen {
     //groups
     private ArrayList<PhysicsActor> meteors;
     private ArrayList<PhysicsActor> lasers;
+    private ArrayList<BasicActor> lasersToRemove;
 
     //sounds
     private Sound laserSound;
@@ -69,6 +70,7 @@ public class StartingLevel extends CommonScreen {
 
     @Override
     public void update(float deltaTime) {
+        laserRemoval();
         playerMovement(deltaTime);
         collisions();
     }
@@ -91,6 +93,7 @@ public class StartingLevel extends CommonScreen {
         //grouping enemys and lasers
         meteors = new ArrayList();
         lasers = new ArrayList();
+        lasersToRemove = new ArrayList();
 
         //audios
         soundVolume = 0.75f;
@@ -202,13 +205,6 @@ public class StartingLevel extends CommonScreen {
                 win.setVisible(true);
             }
         }
-
-        //making the laser destruct itself
-        for (PhysicsActor laserG : lasers) {
-            if (!laserG.isVisible()) {
-                laserG.destroy();
-            }
-        }
     }
 
     /**
@@ -253,19 +249,41 @@ public class StartingLevel extends CommonScreen {
             laserSound.play(soundVolume);
 
             PhysicsActor laserShot = laser.cloned();
+            laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));
+           // laserShot.centerOrigin(spaceShip);
+            laserShot.setVelocityAS(spaceShip.getRotation(), 420);
             laserShot.setTypeOfList(lasers);
-            laserShot.setVelocityAS(spaceShip.getRotation(), 400);
             lasers.add(laserShot);
-
-            laserShot.addAction(
-                    Actions.sequence(
-                            Actions.fadeOut(10), Actions.visible(false)));
-
-            mainStage.addActor(laser);
-
+            
+            mainStage.addActor(laserShot);
+//
+//            if(laserShot.getHeight() > mapHeight) {
+//                laserShot.setVisible(false);
+//            }
+//            laserShot.addAction(
+////                    Actions.sequence(Actions.delay(2),
+//                            Actions.fadeOut(0.5f), Actions.visible(false)));
         }
 
         return false;
+    }
+
+    private void laserRemoval() {
+        lasersToRemove.clear();
+
+        //making the laser destruct itself
+        for (PhysicsActor laserG : lasers) {
+            if(laserG.getHeight() > mapHeight) {
+                  lasersToRemove.add(laserG);
+            }
+//            if (!laserG.isVisible()) {
+//                lasersToRemove.add(laserG);
+//            }
+        }
+
+        for (BasicActor pa : lasersToRemove) {
+            pa.destroy();
+        }
     }
 
     //========= ACTIONS ==================
