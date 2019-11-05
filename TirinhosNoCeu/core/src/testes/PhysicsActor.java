@@ -15,8 +15,8 @@ import com.badlogic.gdx.math.MathUtils;
 public class PhysicsActor extends AnimationActors {
 
     //==== class properties ======
-    private final Vector2 velocity;
-    private final Vector2 acceleration;
+    private Vector2 velocity;
+    private Vector2 acceleration;
 
     //max speed and reducing speed variables below
     private float maximumSpeed;
@@ -176,6 +176,30 @@ public class PhysicsActor extends AnimationActors {
         if (angleChanged && getSpeed() > 0.1) {
             setRotation(getMotionAngle());
         }
+    }
+    
+    /**
+     * 
+     * @param pa
+     */
+    public void copy(PhysicsActor pa) {
+        super.copy(pa);
+        this.velocity = pa.velocity;
+        this.acceleration = pa.acceleration;
+        this.maximumSpeed = pa.maximumSpeed;
+        this.deceleration = pa.deceleration;
+        this.angleChanged = pa.angleChanged;
+    }
+    
+    /**
+     * returns a clone of the object passed as argument
+     * @return 
+     */
+    @Override
+    public PhysicsActor cloned() {
+        PhysicsActor oClone = new PhysicsActor();
+        oClone.copy(this);        
+        return oClone;
     }
 
 }

@@ -93,5 +93,29 @@ public class AnimationActors extends BasicActor {
     public void draw(Batch batch, float pAlpha) {
         super.draw(batch, pAlpha);
     }
+    
+    /**
+     * 
+     * @param p 
+     */
+    public void copy(AnimationActors p) {
+        super.copy(p);
+        
+        this.elapsedTime = 0;
+        this.animationStorage = p.animationStorage;
+        this.activeName = p.activeName;
+        this.activateAnimation = p.animationStorage.get(this.activeName);
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public AnimationActors cloned() {
+        AnimationActors aCopia = new AnimationActors();
+        aCopia.copy(this);
+        return aCopia;
+    }
 
 }

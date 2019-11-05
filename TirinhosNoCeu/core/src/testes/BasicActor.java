@@ -157,31 +157,27 @@ public class BasicActor extends Actor {
      * used to copy the data from the actor to another actor
      *
      * @param original
-     * @return
      */
-    public BasicActor copy(BasicActor original) {
-        BasicActor laCopia = new BasicActor();
-        laCopia.texture.setTexture(original.texture.getTexture());
+    public void copy(BasicActor original) {
+        this.texture.setTexture(original.texture.getTexture());
 
-        //laCopia.texture = this.texture;
+        //this.texture = this.texture;
         //if the passed actor has information, copies it into the actual object
-        if (laCopia.boundariesOfPolygon != null) {
-            laCopia.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
-            laCopia.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
+        if (this.boundariesOfPolygon != null) {
+            this.boundariesOfPolygon = new Polygon(original.boundariesOfPolygon.getVertices());
+            this.boundariesOfPolygon.setOrigin(original.getOriginX(), original.getOriginY());
         }
 
         //updates all positions, color and visibility info of the object copied
-        laCopia.setPosition(original.getX(), original.getY());
-        laCopia.setOriginX(original.getOriginX());
-        laCopia.setOriginY(original.getOriginY());
+        this.setPosition(original.getX(), original.getY());
+        this.setOriginX(original.getOriginX());
+        this.setOriginY(original.getOriginY());
 
-        laCopia.setWidth(original.getWidth());
-        laCopia.setHeight(original.getHeight());
+        this.setWidth(original.getWidth());
+        this.setHeight(original.getHeight());
 
-        laCopia.setColor(original.getColor());
-        laCopia.setVisible(original.isVisible());
-
-        return laCopia;
+        this.setColor(original.getColor());
+        this.setVisible(original.isVisible());
     }
 
     /**
@@ -198,15 +194,12 @@ public class BasicActor extends Actor {
      *
      * @return BasicActor
      */
-//    @Override
-//    public BasicActor clone() throws CloneNotSupportedException{
-//       
-//        BasicActor theCopy = new BasicActor();
-//        theCopy.copy(this);
-//        
-//        return theCopy;
-//    }
-    
+    public BasicActor cloned() {
+        BasicActor theCopy = new BasicActor();
+        theCopy.copy(this);
+        return theCopy;
+    }
+
     /**
      * removes the element from the stage
      */
@@ -217,14 +210,15 @@ public class BasicActor extends Actor {
             typeOfList.remove(this);
         }
     }
-    
+
     /**
      * centers the object to the origin of the texture/position
+     *
      * @param t
      */
     public void centerOrigin(BasicActor t) {
-        this.setPosition(t.getX() + t.getOriginX() - this.getOriginX(), 
+        this.setPosition(t.getX() + t.getOriginX() - this.getOriginX(),
                 t.getY() + t.getOriginY() - this.getOriginY());
     }
-    
+
 }

@@ -104,13 +104,11 @@ public class StartingLevel extends CommonScreen {
             /**
              * TODO: avoid spawning meteors close or "inside" the ship
              */
-            PhysicsActor meteorClone = new PhysicsActor();
-            meteorClone.copy(meteor);
+            PhysicsActor meteorClone = meteor.cloned();
             meteorClone.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
             meteorClone.setPosition(randX, randY);
             meteors.add(meteorClone);
         }
-
     }
 
     /**
@@ -151,9 +149,8 @@ public class StartingLevel extends CommonScreen {
         laser.setMaxSpeed(470);
         laser.setDeceleration(0);
         laser.setEllipseBoundary();
-
         laser.setAutoAngle(true);
-
+        laser.centerOrigin(spaceShip);
         win.setPosition(0, 0);
     }
 
@@ -190,12 +187,7 @@ public class StartingLevel extends CommonScreen {
             spaceShip.rotateBy(-180 * deltaTime);
         }
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-            spaceShip.addAccelerationAS(spaceShip.getRotation(), 125);
-        }
-
-        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-            System.out.println("PEW PEW");
-            laserSound.play(soundVolume);
+            spaceShip.addAccelerationAS(spaceShip.getRotation(), 235);
         }
         wrap();
     }
@@ -208,6 +200,13 @@ public class StartingLevel extends CommonScreen {
             if (spaceShip.overlap(debries, false)) {
                 win.addAction(gameOver);
                 win.setVisible(true);
+            }
+        }
+
+        //making the laser destruct itself
+        for (PhysicsActor laserG : lasers) {
+            if (!laserG.isVisible()) {
+                laserG.destroy();
             }
         }
     }
@@ -249,9 +248,27 @@ public class StartingLevel extends CommonScreen {
             togglePaused();
         }
 
+        if (keycode == Keys.SPACE) {
+            System.out.println("PEW PEW");
+            laserSound.play(soundVolume);
+
+            PhysicsActor laserShot = laser.cloned();
+            laserShot.setTypeOfList(lasers);
+            laserShot.setVelocityAS(spaceShip.getRotation(), 400);
+            lasers.add(laserShot);
+
+            laserShot.addAction(
+                    Actions.sequence(
+                            Actions.fadeOut(10), Actions.visible(false)));
+
+            mainStage.addActor(laser);
+
+        }
+
         return false;
     }
 
+    //========= ACTIONS ==================
     //action to blink game over
     public Action gameOver = Actions.sequence(
             Actions.alpha(0),
