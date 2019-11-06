@@ -153,7 +153,9 @@ public class StartingLevel extends CommonScreen {
         laser.setDeceleration(0);
         laser.setEllipseBoundary();
         laser.setAutoAngle(true);
-        laser.centerOrigin(spaceShip);
+        laser.setOrigin(spaceShip.getOriginX() - 20 , 
+                spaceShip.getOriginY() + 33);
+        
         win.setPosition(0, 0);
     }
 
@@ -248,21 +250,22 @@ public class StartingLevel extends CommonScreen {
             System.out.println("PEW PEW");
             laserSound.play(soundVolume);
 
-            PhysicsActor laserShot = laser.cloned();
-            laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));
-           // laserShot.centerOrigin(spaceShip);
+            PhysicsActor laserShot = new PhysicsActor();
+            laserShot = laser.cloned();
+            laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));           
             laserShot.setVelocityAS(spaceShip.getRotation(), 420);
+            laserShot.centerOrigin(spaceShip);
             laserShot.setTypeOfList(lasers);
             lasers.add(laserShot);
-            
+
             mainStage.addActor(laserShot);
 //
-//            if(laserShot.getHeight() > mapHeight) {
-//                laserShot.setVisible(false);
-//            }
-//            laserShot.addAction(
-////                    Actions.sequence(Actions.delay(2),
-//                            Actions.fadeOut(0.5f), Actions.visible(false)));
+            if (laserShot.getY() > mapHeight) {
+                laserShot.setVisible(false);
+            }
+            laserShot.addAction(
+                    Actions.sequence(Actions.delay(2),
+                            Actions.fadeOut(0.5f), Actions.visible(false)));
         }
 
         return false;
@@ -273,8 +276,8 @@ public class StartingLevel extends CommonScreen {
 
         //making the laser destruct itself
         for (PhysicsActor laserG : lasers) {
-            if(laserG.getHeight() > mapHeight) {
-                  lasersToRemove.add(laserG);
+            if (laserG.getHeight() > mapHeight) {
+                lasersToRemove.add(laserG);
             }
 //            if (!laserG.isVisible()) {
 //                lasersToRemove.add(laserG);
