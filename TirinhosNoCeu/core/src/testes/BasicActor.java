@@ -1,7 +1,7 @@
 /*
  *  actor class for the scene objects
  *  used for collisions
- * Version alpha - 1.8.0
+ * Version alpha - 2.1.0
  */
 package testes;
 

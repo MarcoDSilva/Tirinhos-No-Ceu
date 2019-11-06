@@ -1,7 +1,7 @@
 /*
  * Class that defines the physics required to manipulate the objects
  * will extend the animation actors because some animations will be inserted after
- * Version alpha - 1.5.0
+ * Version alpha - 2.1.0
  */
 package testes;
 

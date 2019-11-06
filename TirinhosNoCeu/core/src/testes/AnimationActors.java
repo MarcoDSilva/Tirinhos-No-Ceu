@@ -1,7 +1,7 @@
 /*
 *animation class that extends the basic actor one
 *hashmaps are used to hold the animations, the first being the key, the 2nd being the animation itself
- * Version alpha - 1.5.0
+ * Version alpha - 2.1.0
  */
 package testes;
 

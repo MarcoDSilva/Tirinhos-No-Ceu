@@ -1,7 +1,7 @@
 /*
  * Game Project - TirinhosNoCeu with the intentions to learn how to use classes and frameworks
  *
- * Version alpha - 1.8.0
+ * Version alpha - 2.1.0
  */
 package testes;
 
@@ -153,9 +153,9 @@ public class StartingLevel extends CommonScreen {
         laser.setDeceleration(0);
         laser.setEllipseBoundary();
         laser.setAutoAngle(true);
-        laser.setOrigin(spaceShip.getOriginX() - 20 , 
+        laser.setOrigin(spaceShip.getOriginX() - 20,
                 spaceShip.getOriginY() + 33);
-        
+
         win.setPosition(0, 0);
     }
 
@@ -231,7 +231,7 @@ public class StartingLevel extends CommonScreen {
     }
 
     /**
-     * key listener for (M)enu and (P)ause
+     * key listener for (M)enu , (P)ause and Space(shooting)
      *
      * @param keycode
      * @return
@@ -252,17 +252,14 @@ public class StartingLevel extends CommonScreen {
 
             PhysicsActor laserShot = new PhysicsActor();
             laserShot = laser.cloned();
-            laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));           
+            laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));
             laserShot.setVelocityAS(spaceShip.getRotation(), 420);
             laserShot.centerOrigin(spaceShip);
             laserShot.setTypeOfList(lasers);
             lasers.add(laserShot);
 
             mainStage.addActor(laserShot);
-//
-            if (laserShot.getY() > mapHeight) {
-                laserShot.setVisible(false);
-            }
+
             laserShot.addAction(
                     Actions.sequence(Actions.delay(2),
                             Actions.fadeOut(0.5f), Actions.visible(false)));
@@ -271,17 +268,18 @@ public class StartingLevel extends CommonScreen {
         return false;
     }
 
+    /**
+     * name itself says it all
+     */
     private void laserRemoval() {
         lasersToRemove.clear();
 
         //making the laser destruct itself
         for (PhysicsActor laserG : lasers) {
-            if (laserG.getHeight() > mapHeight) {
+
+            if (!laserG.isVisible()) {
                 lasersToRemove.add(laserG);
             }
-//            if (!laserG.isVisible()) {
-//                lasersToRemove.add(laserG);
-//            }
         }
 
         for (BasicActor pa : lasersToRemove) {
@@ -301,5 +299,4 @@ public class StartingLevel extends CommonScreen {
                     Actions.color(new Color(0, 0, 0, 1), 1)
             )
     );
-
 }

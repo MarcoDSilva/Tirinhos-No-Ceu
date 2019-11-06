@@ -10,4 +10,4 @@ public class DesktopLauncher {
         TirinhosGame myGame = new TirinhosGame();
         LwjglApplication launcher = new LwjglApplication(myGame);        
     }
-}
+} 
