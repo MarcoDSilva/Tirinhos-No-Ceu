@@ -19,6 +19,7 @@ import com.mygdx.game.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -38,6 +39,7 @@ public class StartingLevel extends CommonScreen {
     private ArrayList<PhysicsActor> meteors;
     private ArrayList<PhysicsActor> lasers;
     private ArrayList<BasicActor> lasersToRemove;
+    private ArrayList<BasicActor> meteorsToRemove;
 
     //sounds
     private Sound laserSound;
@@ -70,9 +72,13 @@ public class StartingLevel extends CommonScreen {
 
     @Override
     public void update(float deltaTime) {
-        laserRemoval();
         playerMovement(deltaTime);
         collisions();
+        laserRemoval();
+
+        for (PhysicsActor l : lasers) {
+            wrap(l);
+        }
     }
 
     // =================== ALL THE METHODS ARE BELOW THIS LINE ===================
@@ -100,7 +106,7 @@ public class StartingLevel extends CommonScreen {
         laserSound = Gdx.audio.newSound(Gdx.files.internal("pew_pew.ogg"));
 
         //coordinates for the meteors being cloned 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             int randX = random.nextInt(800);
             int randY = random.nextInt(800);
 
@@ -110,6 +116,7 @@ public class StartingLevel extends CommonScreen {
             PhysicsActor meteorClone = meteor.cloned();
             meteorClone.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
             meteorClone.setPosition(randX, randY);
+            meteorClone.setEllipseBoundary();
             meteors.add(meteorClone);
         }
     }
@@ -153,8 +160,8 @@ public class StartingLevel extends CommonScreen {
         laser.setDeceleration(0);
         laser.setEllipseBoundary();
         laser.setAutoAngle(true);
-        laser.setOrigin(spaceShip.getOriginX() - 20,
-                spaceShip.getOriginY() + 33);
+        laser.setOrigin(spaceShip.getOriginX() - ((spaceShip.getWidth() - laser.getWidth()) / 2),
+                spaceShip.getOriginY() + ((spaceShip.getHeight() - laser.getHeight()) / 2));
 
         win.setPosition(0, 0);
     }
@@ -170,6 +177,7 @@ public class StartingLevel extends CommonScreen {
         //setting it's hitbox to be one ellipse
         for (PhysicsActor meteorClones : meteors) {
             meteorClones.setEllipseBoundary();
+            meteorClones.setTypeOfList(meteorsToRemove);
             mainStage.addActor(meteorClones);
         }
 
@@ -194,7 +202,7 @@ public class StartingLevel extends CommonScreen {
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
             spaceShip.addAccelerationAS(spaceShip.getRotation(), 235);
         }
-        wrap();
+        wrap(spaceShip);
     }
 
     /**
@@ -206,27 +214,37 @@ public class StartingLevel extends CommonScreen {
                 win.addAction(gameOver);
                 win.setVisible(true);
             }
+
+            for (PhysicsActor l : lasers) {
+                if (l.overlap(debries, false)) {
+                    System.out.println(l.getX() + "");
+                    System.out.println("CABOOOM");
+                    System.out.println(debries + "foi atacado");
+                    meteorsToRemove.add(debries);
+                    lasersToRemove.add(l);
+                }
+            }
         }
     }
 
     /**
      * makes the spaceship not "stuck" to the corners, and lets it pass to the other side
      */
-    private void wrap() {
-        if (spaceShip.getX() < 0) {
-            spaceShip.setX(mapWidth);
+    private void wrap(PhysicsActor pa) {
+        if (pa.getX() < 0) {
+            pa.setX(mapWidth);
         }
 
-        if (spaceShip.getX() > mapWidth) {
-            spaceShip.setX(0);
+        if (pa.getX() > mapWidth) {
+            pa.setX(0);
         }
 
-        if (spaceShip.getY() < 0) {
-            spaceShip.setY(mapHeight);
+        if (pa.getY() < 0) {
+            pa.setY(mapHeight);
         }
 
-        if (spaceShip.getY() > mapHeight) {
-            spaceShip.setY(0);
+        if (pa.getY() > mapHeight) {
+            pa.setY(0);
         }
     }
 
@@ -256,6 +274,7 @@ public class StartingLevel extends CommonScreen {
             laserShot.setVelocityAS(spaceShip.getRotation(), 420);
             laserShot.centerOrigin(spaceShip);
             laserShot.setTypeOfList(lasers);
+            laserShot.setRectangleBoundary();
             lasers.add(laserShot);
 
             mainStage.addActor(laserShot);
@@ -272,7 +291,6 @@ public class StartingLevel extends CommonScreen {
      * name itself says it all
      */
     private void laserRemoval() {
-        lasersToRemove.clear();
 
         //making the laser destruct itself
         for (PhysicsActor laserG : lasers) {
@@ -285,6 +303,12 @@ public class StartingLevel extends CommonScreen {
         for (BasicActor pa : lasersToRemove) {
             pa.destroy();
         }
+
+//        for (BasicActor m : meteorsToRemove) {           
+//            m.destroy();
+//        }
+        lasersToRemove.clear();
+        meteorsToRemove.clear();
     }
 
     //========= ACTIONS ==================
