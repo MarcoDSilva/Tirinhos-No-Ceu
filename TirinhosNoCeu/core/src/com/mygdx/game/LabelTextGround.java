@@ -30,7 +30,6 @@ public class LabelTextGround {
         style = new LabelStyle(font, Color.YELLOW);
         timeLabel = new Label(text, style);
         timeLabel.setFontScale(2);
-        timeLabel.setPosition(100, 400);
     }
 
     public float getTimeElapsed() {
@@ -47,8 +46,16 @@ public class LabelTextGround {
 
     public void setText(String text) {
         timeLabel.setText(text);
-        
+
     }
-    
+
+    /**
+     *sets the label position with x and y
+     * @param x
+     * @param y
+     */
+    public void positionSet(float x, float y) {
+        timeLabel.setPosition(x, y);
+    }
 
 }

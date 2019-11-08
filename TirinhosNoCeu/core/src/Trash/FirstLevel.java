@@ -1,4 +1,4 @@
-package GameLevels;
+package Trash;
 
 /**
  * Game Project - TirinhosNoCeu with the intentions to learn how to use classes and frameworks
@@ -7,6 +7,7 @@ package GameLevels;
  *
  * @author - Marco Silva
  */
+import GameLevels.GameMainMenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.Camera;
-import com.mygdx.game.BaseActor;
 import com.mygdx.game.CommonScreen;
 import com.mygdx.game.LabelTextGround;
 
@@ -46,6 +46,7 @@ public class FirstLevel extends CommonScreen {
     /**
      * here we instantiate the actors, textures and positions
      */
+    @Override
     public void create() {
         initActor();
         initTextures();
@@ -143,6 +144,7 @@ public class FirstLevel extends CommonScreen {
         spaceShip.setPosition(getWidth() / 2, getHeight() / 2);
         meteor.setPosition(200, 350);
         win.setPosition(0, 0);
+        
     }
 
     /**

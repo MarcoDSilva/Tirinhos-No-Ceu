@@ -1,6 +1,7 @@
 package GameLevels;
 
-import com.mygdx.game.BaseActor;
+import PlayerClasses.BasicActor;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.CommonScreen;
-import testes.StartingLevel;
+
 
 /**
  *
@@ -45,7 +46,6 @@ public class GameMainMenu extends CommonScreen {
         if (keycode == Keys.ESCAPE) {
             Gdx.app.exit();
         }
-
         return false;
     }
 
@@ -53,16 +53,17 @@ public class GameMainMenu extends CommonScreen {
     /**
      * instantiate the interface Stage and respective actors to be added Background, text Title, and label
      *
-     * @return menu design
      */
     public void init() {
-        BaseActor background = new BaseActor();
+
+        BasicActor background = new BasicActor();
         background.setTexture(new Texture(Gdx.files.internal("purple.png")));
         userInterface.addActor(background);
 
-        BaseActor textTitle = new BaseActor();
+        BasicActor textTitle = new BasicActor();
         textTitle.setTexture(new Texture(Gdx.files.internal("title.png")));
         textTitle.setPosition(30, 310);
+        textTitle.sizeBy(getWidth() / 4, getHeight() / 6);
         userInterface.addActor(textTitle);
 
         BitmapFont font = new BitmapFont();
@@ -80,7 +81,6 @@ public class GameMainMenu extends CommonScreen {
      * color blinking for menu
      *
      * @param a
-     * @param actions
      */
     public void actions(Label a) {
         a.addAction(

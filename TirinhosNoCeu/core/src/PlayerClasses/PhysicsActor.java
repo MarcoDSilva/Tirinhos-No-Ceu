@@ -3,7 +3,7 @@
  * will extend the animation actors because some animations will be inserted after
  * Version alpha - 2.1.0
  */
-package testes;
+package PlayerClasses;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.MathUtils;

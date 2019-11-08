@@ -3,7 +3,7 @@
 *hashmaps are used to hold the animations, the first being the key, the 2nd being the animation itself
  * Version alpha - 2.1.0
  */
-package testes;
+package PlayerClasses;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.Texture;

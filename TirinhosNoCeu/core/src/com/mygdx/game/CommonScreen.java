@@ -83,6 +83,7 @@ public abstract class CommonScreen implements Screen, InputProcessor {
     }
 
     //=== resize method with the sizes of the viewports when they are changed
+    @Override
     public void resize(int w, int h) {
         mainStage.getViewport().update(w, h, true);
         userInterface.getViewport().update(w, h, true);
@@ -100,52 +101,65 @@ public abstract class CommonScreen implements Screen, InputProcessor {
     /**
      * Below are the methods required from the Screen class
      */
+    @Override
     public void dispose() {
     }
 
+    @Override
     public void hide() {
     }
 
+    @Override
     public void resume() {
     }
 
+    @Override
     public void pause() {
     }
 
+    @Override
     public void show() {
     }
 
     /**
      * Below are the methods from the InputProcessor class
      */
+    @Override
     public boolean scrolled(int amount) {
         return false;
     }
 
+    @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
+    @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
 
+    @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 
+    @Override
     public boolean keyTyped(char chara) {
         return false;
     }
 
+    @Override
     public boolean keyUp(int keyCode) {
         return false;
     }
 
+    @Override
     public boolean keyDown(int keyCode) {
         return false;
     }

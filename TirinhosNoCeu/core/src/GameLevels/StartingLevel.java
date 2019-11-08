@@ -3,15 +3,13 @@
  *
  * Version alpha - 2.1.0
  */
-package testes;
+package GameLevels;
 
-import GameLevels.GameMainMenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import static com.badlogic.gdx.math.MathUtils.random;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -19,7 +17,8 @@ import com.mygdx.game.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 import java.util.ArrayList;
-import java.util.Iterator;
+import PlayerClasses.BasicActor;
+import PlayerClasses.PhysicsActor;
 
 /**
  *
@@ -38,19 +37,21 @@ public class StartingLevel extends CommonScreen {
     //groups
     private ArrayList<PhysicsActor> meteors;
     private ArrayList<PhysicsActor> lasers;
-    private ArrayList<BasicActor> lasersToRemove;
-    private ArrayList<BasicActor> meteorsToRemove;
+    private ArrayList<BasicActor> elementsToRemove;
 
     //sounds
     private Sound laserSound;
+    private Music bgSound;
     private float soundVolume;
 
     //=== game size ===
     private final float mapWidth;
     private final float mapHeight;
 
-    //=== label for score ===
-    private LabelTextGround labels;
+    //=== label for score and timer ===
+    private LabelTextGround timerLabel;
+    private LabelTextGround scoreLabel;
+    private int totalScore;
 
     // ===== CONSTRUCTOR =====
     public StartingLevel(Game game) {
@@ -70,15 +71,22 @@ public class StartingLevel extends CommonScreen {
         initActors();
     }
 
+    /**
+     * the update method takes care of the draw part of the game
+     * and updates the game by frame per sec (deltaTime)
+     * @param deltaTime 
+     */
     @Override
     public void update(float deltaTime) {
         playerMovement(deltaTime);
         collisions();
-        laserRemoval();
+        laserAndMeteorRemoval();
 
-        for (PhysicsActor l : lasers) {
-            wrap(l);
-        }
+        timerLabel.setTimeElapsed(deltaTime);
+        timerLabel.setText("Time: " + (int) timerLabel.getTimeElapsed());
+
+        scoreLabel.setTimeElapsed(deltaTime);
+        scoreLabel.setText("Score: " + totalScore);
     }
 
     // =================== ALL THE METHODS ARE BELOW THIS LINE ===================
@@ -87,26 +95,29 @@ public class StartingLevel extends CommonScreen {
      */
     private void initActor() {
         background = new BasicActor();
-        win = new BasicActor();
+        win = new BasicActor(); //the gameover place holder
 
         //player and enemy
         spaceShip = new PhysicsActor();
         meteor = new PhysicsActor();
         laser = new PhysicsActor();
 
-        labels = new LabelTextGround();
+        //score and timer
+        timerLabel = new LabelTextGround();
+        scoreLabel = new LabelTextGround();
+        totalScore = 0;
 
         //grouping enemys and lasers
         meteors = new ArrayList();
         lasers = new ArrayList();
-        lasersToRemove = new ArrayList();
+        elementsToRemove = new ArrayList();
 
         //audios
         soundVolume = 0.75f;
         laserSound = Gdx.audio.newSound(Gdx.files.internal("pew_pew.ogg"));
 
         //coordinates for the meteors being cloned 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             int randX = random.nextInt(800);
             int randY = random.nextInt(800);
 
@@ -138,8 +149,10 @@ public class StartingLevel extends CommonScreen {
      */
     private void initPositions() {
         background.setPosition(0, 0);
-
         spaceShip.setPosition(400, 250);
+
+        timerLabel.positionSet(50, 700);
+        scoreLabel.positionSet(600, 700);
 
         if (spaceShip.getWidth() != 0) {
             spaceShip.setOrigin(spaceShip.getWidth() / 2, spaceShip.getHeight() / 2);
@@ -150,10 +163,6 @@ public class StartingLevel extends CommonScreen {
         spaceShip.setDeceleration(50);
         spaceShip.setEllipseBoundary();
         spaceShip.setRotation(90);
-
-        //meteor properties
-        meteor.setPosition(22, 222);
-        meteor.setEllipseBoundary();
 
         //laser props
         laser.setMaxSpeed(470);
@@ -171,18 +180,18 @@ public class StartingLevel extends CommonScreen {
      */
     private void initActors() {
         mainStage.addActor(background);
-        mainStage.addActor(meteor);
 
         //cloning the original meteor to create difference varieties
         //setting it's hitbox to be one ellipse
         for (PhysicsActor meteorClones : meteors) {
             meteorClones.setEllipseBoundary();
-            meteorClones.setTypeOfList(meteorsToRemove);
+            meteorClones.setTypeOfList(meteors);
             mainStage.addActor(meteorClones);
         }
 
         mainStage.addActor(spaceShip);
-        labels = new LabelTextGround();
+        userInterface.addActor(timerLabel.getTimeLabel());
+        userInterface.addActor(scoreLabel.getTimeLabel());
         mainStage.addActor(win);
     }
 
@@ -202,35 +211,26 @@ public class StartingLevel extends CommonScreen {
         if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
             spaceShip.addAccelerationAS(spaceShip.getRotation(), 235);
         }
-        wrap(spaceShip);
+        warpMapWalls(spaceShip);
     }
 
     /**
-     * detects the collision between game objects
+     * detects the collision between the ship and the meteors
      */
     private void collisions() {
         for (PhysicsActor debries : meteors) {
             if (spaceShip.overlap(debries, false)) {
                 win.addAction(gameOver);
                 win.setVisible(true);
+                togglePaused();
             }
-            
-            if (laser.overlap(debries, false)) {
-                System.out.println(laser.getX() + "");
-                System.out.println(debries + "foi atacado");
-                meteorsToRemove.add(debries);
-                lasersToRemove.add(laser);
-                debries.setVisible(false);
-                
-            }
-
         }
     }
 
     /**
-     * makes the spaceship not "stuck" to the corners, and lets it pass to the other side
+     * makes the spaceship not getting "stuck" to the corners of the map and lets it warp to the other side
      */
-    private void wrap(PhysicsActor pa) {
+    private void warpMapWalls(PhysicsActor pa) {
         if (pa.getX() < 0) {
             pa.setX(mapWidth);
         }
@@ -262,13 +262,16 @@ public class StartingLevel extends CommonScreen {
 
         if (keycode == Keys.P) {
             togglePaused();
+            //menu paused to be inserted here
         }
 
+        /**
+         * when the space key is pressed we proceed to: cloning the base laser which is content will be added to a new laserShot the laserShot gets the new respective properties and boundaries needed to act and we finalize with the actions to remove laser from memory after 2 seconds
+         */
         if (keycode == Keys.SPACE) {
             laserSound.play(soundVolume);
 
-            PhysicsActor laserShot = new PhysicsActor();
-            laserShot = laser.cloned();
+            PhysicsActor laserShot = laser.cloned();
             laserShot.setTexture(new Texture(Gdx.files.internal("laser.png")));
             laserShot.setVelocityAS(spaceShip.getRotation(), 420);
             laserShot.centerOrigin(spaceShip);
@@ -277,37 +280,41 @@ public class StartingLevel extends CommonScreen {
             lasers.add(laserShot);
 
             mainStage.addActor(laserShot);
-
             laserShot.addAction(
                     Actions.sequence(Actions.delay(2),
                             Actions.fadeOut(0.5f), Actions.visible(false)));
         }
-
         return false;
     }
 
     /**
-     * name itself says it all
+     * This method is used to verify if the lasers/meteors are not visible anymore or if the laser and meteors collided. If they have contact between each other, remove them from the game.
      */
-    private void laserRemoval() {
+    private void laserAndMeteorRemoval() {
+        elementsToRemove.clear();
 
-        //making the laser destruct itself
         for (PhysicsActor laserG : lasers) {
+            //warpMapWalls(laserG);
 
             if (!laserG.isVisible()) {
-                lasersToRemove.add(laserG);
+                elementsToRemove.add(laserG);
+            }
+
+            for (PhysicsActor debries : meteors) {
+                if (laserG.overlap(debries, false)) {
+                    elementsToRemove.add(laserG);
+                    debries.setVisible(false);
+                    elementsToRemove.add(debries);
+                    totalScore += 25 * scoreLabel.getTimeElapsed();
+                }
             }
         }
 
-        for (BasicActor pa : lasersToRemove) {
+        //loop to remove lasers and meteors from play and memory
+        for (BasicActor pa : elementsToRemove) {
             pa.destroy();
         }
 
-        for (BasicActor m : meteorsToRemove) {           
-            m.destroy();
-        }
-        lasersToRemove.clear();
-        meteorsToRemove.clear();
     }
 
     //========= ACTIONS ==================
