@@ -214,16 +214,16 @@ public class StartingLevel extends CommonScreen {
                 win.addAction(gameOver);
                 win.setVisible(true);
             }
-
-            for (PhysicsActor l : lasers) {
-                if (l.overlap(debries, false)) {
-                    System.out.println(l.getX() + "");
-                    System.out.println("CABOOOM");
-                    System.out.println(debries + "foi atacado");
-                    meteorsToRemove.add(debries);
-                    lasersToRemove.add(l);
-                }
+            
+            if (laser.overlap(debries, false)) {
+                System.out.println(laser.getX() + "");
+                System.out.println(debries + "foi atacado");
+                meteorsToRemove.add(debries);
+                lasersToRemove.add(laser);
+                debries.setVisible(false);
+                
             }
+
         }
     }
 
@@ -265,7 +265,6 @@ public class StartingLevel extends CommonScreen {
         }
 
         if (keycode == Keys.SPACE) {
-            System.out.println("PEW PEW");
             laserSound.play(soundVolume);
 
             PhysicsActor laserShot = new PhysicsActor();
@@ -304,9 +303,9 @@ public class StartingLevel extends CommonScreen {
             pa.destroy();
         }
 
-//        for (BasicActor m : meteorsToRemove) {           
-//            m.destroy();
-//        }
+        for (BasicActor m : meteorsToRemove) {           
+            m.destroy();
+        }
         lasersToRemove.clear();
         meteorsToRemove.clear();
     }
