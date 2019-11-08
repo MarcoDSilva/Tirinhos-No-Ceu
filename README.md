@@ -16,6 +16,9 @@ Game Level
 #### Version Notes:
 
 > Input Key Listener works with WASD or arrow keys, and space for shooting. 
+
 > Menu 
+
 > Collisions work and counters for timer and score
+
 > Tons of features to be fixed.
