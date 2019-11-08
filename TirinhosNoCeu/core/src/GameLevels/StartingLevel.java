@@ -28,7 +28,8 @@ public class StartingLevel extends CommonScreen {
 
     //=== level elements ===  
     private BasicActor background;
-    private BasicActor win;
+    private BasicActor gameOverLayout;
+    private BasicActor winLayout;
 
     private PhysicsActor spaceShip;
     private PhysicsActor meteor;
@@ -48,10 +49,11 @@ public class StartingLevel extends CommonScreen {
     private final float mapWidth;
     private final float mapHeight;
 
-    //=== label for score and timer ===
+    //=== label for score / timer / counter ===
     private LabelTextGround timerLabel;
     private LabelTextGround scoreLabel;
     private int totalScore;
+    private int counter;
 
     // ===== CONSTRUCTOR =====
     public StartingLevel(Game game) {
@@ -95,7 +97,8 @@ public class StartingLevel extends CommonScreen {
      */
     private void initActor() {
         background = new BasicActor();
-        win = new BasicActor(); //the gameover place holder
+        gameOverLayout = new BasicActor(); //the gameover place holder
+        winLayout = new BasicActor();
 
         //player and enemy
         spaceShip = new PhysicsActor();
@@ -106,6 +109,7 @@ public class StartingLevel extends CommonScreen {
         timerLabel = new LabelTextGround();
         scoreLabel = new LabelTextGround();
         totalScore = 0;
+        counter = 7;
 
         //grouping enemys and lasers
         meteors = new ArrayList();
@@ -117,7 +121,7 @@ public class StartingLevel extends CommonScreen {
         laserSound = Gdx.audio.newSound(Gdx.files.internal("pew_pew.ogg"));
 
         //coordinates for the meteors being cloned 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < counter; i++) {
             int randX = random.nextInt(800);
             int randY = random.nextInt(800);
 
@@ -137,8 +141,10 @@ public class StartingLevel extends CommonScreen {
      */
     private void initTextures() {
         background.setTexture(new Texture(Gdx.files.internal("blueBackground.png")));
-        win.setTexture(new Texture(Gdx.files.internal("end.png")));
-        win.setVisible(false);
+        gameOverLayout.setTexture(new Texture(Gdx.files.internal("end.png")));
+        gameOverLayout.setVisible(false);
+        winLayout.setTexture(new Texture(Gdx.files.internal("victory.png")));
+        winLayout.setVisible(false);
         spaceShip.setTexture(new Texture(Gdx.files.internal("playerShip.png")));
         meteor.setTexture(new Texture(Gdx.files.internal("meteorMedium.png")));
         laser.setTexture(new Texture(Gdx.files.internal("laser.png")));
@@ -172,7 +178,7 @@ public class StartingLevel extends CommonScreen {
         laser.setOrigin(spaceShip.getOriginX() - ((spaceShip.getWidth() - laser.getWidth()) / 2),
                 spaceShip.getOriginY() + ((spaceShip.getHeight() - laser.getHeight()) / 2));
 
-        win.setPosition(0, 0);
+        gameOverLayout.setPosition(0, 0);
     }
 
     /**
@@ -192,7 +198,8 @@ public class StartingLevel extends CommonScreen {
         mainStage.addActor(spaceShip);
         userInterface.addActor(timerLabel.getTimeLabel());
         userInterface.addActor(scoreLabel.getTimeLabel());
-        mainStage.addActor(win);
+        mainStage.addActor(gameOverLayout);
+        mainStage.addActor(winLayout);
     }
 
     /**
@@ -220,10 +227,16 @@ public class StartingLevel extends CommonScreen {
     private void collisions() {
         for (PhysicsActor debries : meteors) {
             if (spaceShip.overlap(debries, false)) {
-                win.addAction(gameOver);
-                win.setVisible(true);
+                gameOverLayout.addAction(gameOver);
+                gameOverLayout.setVisible(true);
                 togglePaused();
             }
+        }
+        
+        if(counter == 0) {
+            togglePaused();
+            winLayout.addAction(gameOver);
+            winLayout.setVisible(true);
         }
     }
 
@@ -305,7 +318,8 @@ public class StartingLevel extends CommonScreen {
                     elementsToRemove.add(laserG);
                     debries.setVisible(false);
                     elementsToRemove.add(debries);
-                    totalScore += 25 * scoreLabel.getTimeElapsed();
+                    totalScore += 100 / scoreLabel.getTimeElapsed();
+                    counter--;
                 }
             }
         }
